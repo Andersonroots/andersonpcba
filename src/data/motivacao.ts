@@ -1,0 +1,87 @@
+export interface Versiculo {
+  texto: string;
+  ref: string;
+}
+
+export const VERSICULOS: Versiculo[] = [
+  { texto: "Tudo posso naquele que me fortalece.", ref: "Filipenses 4:13" },
+  { texto: "Entrega o teu caminho ao Senhor, confia nele, e ele o fará.", ref: "Salmos 37:5" },
+  { texto: "O Senhor é a minha força e o meu escudo; nele o meu coração confia.", ref: "Salmos 28:7" },
+  { texto: "Seja forte e corajoso! Não se apavore nem desanime, pois o Senhor estará com você por onde você andar.", ref: "Josué 1:9" },
+  { texto: "Os que esperam no Senhor renovarão as suas forças; subirão com asas como águias.", ref: "Isaías 40:31" },
+  { texto: "Consagre ao Senhor tudo o que você faz, e os seus planos serão bem-sucedidos.", ref: "Provérbios 16:3" },
+  { texto: "Não desanimemos de fazer o bem, pois no tempo próprio colheremos, se não desistirmos.", ref: "Gálatas 6:9" },
+  { texto: "O coração do homem planeja o seu caminho, mas o Senhor lhe dirige os passos.", ref: "Provérbios 16:9" },
+  { texto: "Tudo tem o seu tempo determinado, e há tempo para todo o propósito debaixo do céu.", ref: "Eclesiastes 3:1" },
+  { texto: "Porque eu bem sei os planos que tenho a vosso respeito: planos de paz e não de mal, para vos dar um futuro e uma esperança.", ref: "Jeremias 29:11" },
+  { texto: "Aquele que é fiel no pouco, também é fiel no muito.", ref: "Lucas 16:10" },
+  { texto: "O trabalho diligente traz fartura; a pressa excessiva leva à pobreza.", ref: "Provérbios 21:5" },
+  { texto: "Buscai primeiro o Reino de Deus e a sua justiça, e todas as demais coisas vos serão acrescentadas.", ref: "Mateus 6:33" },
+  { texto: "Ele dá força ao cansado e multiplica as forças ao que não tem nenhum vigor.", ref: "Isaías 40:29" },
+  { texto: "Ainda que a visão demore, espera-a, porque certamente virá e não tardará.", ref: "Habacuque 2:3" },
+  { texto: "O Senhor é o meu pastor, nada me faltará.", ref: "Salmos 23:1" },
+  { texto: "Que tudo o que vocês fizerem seja feito com amor.", ref: "1 Coríntios 16:14" },
+  { texto: "Não temas, porque eu sou contigo; não te assombres, porque eu sou o teu Deus.", ref: "Isaías 41:10" },
+  { texto: "Alegrem-se na esperança, sejam pacientes na tribulação, perseverem na oração.", ref: "Romanos 12:12" },
+  { texto: "A sabedoria é a coisa principal; adquire, pois, a sabedoria.", ref: "Provérbios 4:7" },
+  { texto: "Tudo o que fizerem, façam de todo o coração, como para o Senhor, e não para os homens.", ref: "Colossenses 3:23" },
+  { texto: "Lâmpada para os meus pés é a tua palavra e luz para o meu caminho.", ref: "Salmos 119:105" },
+  { texto: "Combati o bom combate, completei a carreira, guardei a fé.", ref: "2 Timóteo 4:7" },
+  { texto: "O Senhor pelejará por vós, e vós vos calareis.", ref: "Êxodo 14:14" },
+  { texto: "Bem-aventurado o homem que persevera na provação.", ref: "Tiago 1:12" },
+  { texto: "Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.", ref: "Provérbios 3:5" },
+  { texto: "Eu vim para que tenham vida, e vida em abundância.", ref: "João 10:10" },
+  { texto: "Cada dia tem seu próprio problema; basta a cada dia o seu mal.", ref: "Mateus 6:34" },
+  { texto: "A esperança que se adia faz adoecer o coração, mas o desejo cumprido é árvore de vida.", ref: "Provérbios 13:12" },
+  { texto: "Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia.", ref: "Salmos 46:1" },
+  { texto: "Corramos com perseverança a corrida que nos é proposta.", ref: "Hebreus 12:1" },
+];
+
+export const DISCURSIVAS: string[] = [
+  "Disserte sobre a cadeia de custódia da prova (arts. 158-A a 158-F do CPP) e as consequências jurídicas da sua quebra.",
+  "Discorra sobre o poder de polícia: conceito, ciclo, atributos e os limites da delegação a particulares.",
+  "Analise o crime de abuso de autoridade previsto na Lei 13.869/2019 quanto ao elemento subjetivo especial.",
+  "Explique a distinção entre dolo eventual e culpa consciente e sua repercussão prática nos crimes de trânsito.",
+  "Disserte sobre as medidas protetivas de urgência da Lei Maria da Penha e a atuação da autoridade policial.",
+  "Discorra sobre o inquérito policial: natureza jurídica, características e o valor probatório dos elementos informativos.",
+  "Analise o acordo de não persecução penal: requisitos, vedações e o papel do delegado de polícia.",
+  "Explique a responsabilidade civil do Estado por atos comissivos e omissivos, com as respectivas teorias.",
+  "Disserte sobre o tráfico privilegiado (art. 33, §4º da Lei de Drogas) e a natureza hedionda da conduta.",
+  "Discorra sobre a colaboração premiada na Lei 12.850/2013 e a legitimidade do delegado para celebrá-la.",
+  "Analise a legítima defesa e o estrito cumprimento do dever legal na atividade do policial civil.",
+  "Disserte sobre o princípio da insignificância e sua (in)aplicabilidade aos crimes contra a Administração Pública.",
+  "Discorra sobre o racismo e a injúria racial após a Lei 14.532/2023, abordando a imprescritibilidade.",
+  "Explique o Estatuto da Igualdade Racial e o Sistema Nacional de Promoção da Igualdade Racial (SINAPIR).",
+  "Analise as hipóteses de prisão temporária e sua diferença em relação à prisão preventiva.",
+  "Disserte sobre a improbidade administrativa após a Lei 14.230/2021, com foco no elemento subjetivo.",
+  "Discorra sobre a Lei Orgânica da Polícia Civil da Bahia e as atribuições do investigador de polícia.",
+  "Explique o regime disciplinar do servidor público estadual (Lei 6.677/1994): penalidades e prescrição.",
+  "Analise a prova ilícita e a teoria dos frutos da árvore envenenada, com suas exceções.",
+  "Disserte sobre a busca domiciliar e o entendimento do STF sobre o flagrante em domicílio (RE 603.616).",
+  "Discorra sobre os crimes praticados por funcionário público contra a Administração em geral.",
+  "Explique o controle externo da atividade policial exercido pelo Ministério Público.",
+  "Analise o Estatuto do Desarmamento: distinção entre posse e porte e o porte funcional.",
+  "Disserte sobre o ato administrativo: requisitos, atributos e as hipóteses de convalidação.",
+  "Discorra sobre a Lei de Interceptação Telefônica e o fenômeno da serendipidade.",
+  "Explique o funcionamento das contas contábeis e o método das partidas dobradas.",
+  "Analise o Balanço Patrimonial e a Demonstração do Resultado do Exercício quanto à sua finalidade informativa.",
+  "Disserte sobre licitações na Lei 14.133/2021: modalidades, contratação direta e critérios de julgamento.",
+  "Discorra sobre o ato infracional no ECA e as medidas socioeducativas aplicáveis.",
+  "Explique a organização criminosa (Lei 12.850/2013) e sua distinção da associação criminosa do art. 288 do CP.",
+  "Analise os princípios expressos e implícitos da Administração Pública e suas repercussões práticas.",
+  "Disserte sobre a Lei de Lavagem de Dinheiro: fases do branqueamento e a teoria da cegueira deliberada.",
+];
+
+export const RUIDOS = [
+  { id: "chuva", nome: "Chuva", emoji: "🌧️", tipo: "brown" as const },
+  { id: "branco", nome: "Ruído branco", emoji: "⚪", tipo: "white" as const },
+  { id: "rosa", nome: "Ruído rosa", emoji: "🌸", tipo: "pink" as const },
+  { id: "marrom", nome: "Ruído marrom", emoji: "🟤", tipo: "brown" as const },
+  { id: "cafe", nome: "Cafeteria", emoji: "☕", tipo: "pink" as const },
+];
+
+export const LOFI = [
+  { id: "lofi1", nome: "Lo-fi Beats para estudar", url: "https://www.youtube.com/embed/jfKfPfyJRdk" },
+  { id: "lofi2", nome: "Lo-fi Chill / Foco profundo", url: "https://www.youtube.com/embed/4xDzrJKXOOY" },
+  { id: "lofi3", nome: "Piano relaxante", url: "https://www.youtube.com/embed/lTRiuFIWV54" },
+];
