@@ -15,6 +15,7 @@ import { Route as ErrosRouteImport } from './routes/erros'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
 import { Route as QuestoesRouteImport } from './routes/questoes'
 import { Route as RevisoesRouteImport } from './routes/revisoes'
+import { Route as SimuladosRouteImport } from './routes/simulados'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const RevisoesRoute = RevisoesRouteImport.update({
   path: '/revisoes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SimuladosRoute = SimuladosRouteImport.update({
+  id: '/simulados',
+  path: '/simulados',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,14 +79,27 @@ export interface FileRoutesById {
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/cronograma' | '/erros' | '/planejamento' | '/questoes' | '/revisoes'
+    | '/'
+    | '/cronograma'
+    | '/erros'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
+    | '/simulados'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/cronograma' | '/erros' | '/planejamento' | '/questoes' | '/revisoes'
+    | '/'
+    | '/cronograma'
+    | '/erros'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
+    | '/simulados'
   id:
     | '__root__'
     | '/'
@@ -87,6 +108,7 @@ export interface FileRouteTypes {
     | '/planejamento'
     | '/questoes'
     | '/revisoes'
+    | '/simulados'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -96,6 +118,7 @@ export interface RootRouteChildren {
   PlanejamentoRoute: typeof PlanejamentoRoute
   QuestoesRoute: typeof QuestoesRoute
   RevisoesRoute: typeof RevisoesRoute
+  SimuladosRoute: typeof SimuladosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -142,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevisoesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/simulados': {
+      id: '/simulados'
+      path: '/simulados'
+      fullPath: '/simulados'
+      preLoaderRoute: typeof SimuladosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -152,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanejamentoRoute: PlanejamentoRoute,
   QuestoesRoute: QuestoesRoute,
   RevisoesRoute: RevisoesRoute,
+  SimuladosRoute: SimuladosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
