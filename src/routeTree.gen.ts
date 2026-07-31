@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CronogramaRouteImport } from './routes/cronograma'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
+import { Route as QuestoesRouteImport } from './routes/questoes'
 import { Route as RevisoesRouteImport } from './routes/revisoes'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const PlanejamentoRoute = PlanejamentoRouteImport.update({
   path: '/planejamento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuestoesRoute = QuestoesRouteImport.update({
+  id: '/questoes',
+  path: '/questoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RevisoesRoute = RevisoesRouteImport.update({
   id: '/revisoes',
   path: '/revisoes',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cronograma' | '/planejamento' | '/revisoes'
+  fullPaths: '/' | '/cronograma' | '/planejamento' | '/questoes' | '/revisoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cronograma' | '/planejamento' | '/revisoes'
-  id: '__root__' | '/' | '/cronograma' | '/planejamento' | '/revisoes'
+  to: '/' | '/cronograma' | '/planejamento' | '/questoes' | '/revisoes'
+  id:
+    | '__root__'
+    | '/'
+    | '/cronograma'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CronogramaRoute: typeof CronogramaRoute
   PlanejamentoRoute: typeof PlanejamentoRoute
+  QuestoesRoute: typeof QuestoesRoute
   RevisoesRoute: typeof RevisoesRoute
 }
 
@@ -92,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanejamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/questoes': {
+      id: '/questoes'
+      path: '/questoes'
+      fullPath: '/questoes'
+      preLoaderRoute: typeof QuestoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/revisoes': {
       id: '/revisoes'
       path: '/revisoes'
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CronogramaRoute: CronogramaRoute,
   PlanejamentoRoute: PlanejamentoRoute,
+  QuestoesRoute: QuestoesRoute,
   RevisoesRoute: RevisoesRoute,
 }
 export const routeTree = rootRouteImport
