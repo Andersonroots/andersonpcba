@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CronogramaRouteImport } from './routes/cronograma'
+import { Route as EditalRouteImport } from './routes/edital'
 import { Route as ErrosRouteImport } from './routes/erros'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
 import { Route as QuestoesRouteImport } from './routes/questoes'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const CronogramaRoute = CronogramaRouteImport.update({
   id: '/cronograma',
   path: '/cronograma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditalRoute = EditalRouteImport.update({
+  id: '/edital',
+  path: '/edital',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ErrosRoute = ErrosRouteImport.update({
@@ -56,6 +62,7 @@ const SimuladosRoute = SimuladosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cronograma'
+    | '/edital'
     | '/erros'
     | '/planejamento'
     | '/questoes'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cronograma'
+    | '/edital'
     | '/erros'
     | '/planejamento'
     | '/questoes'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cronograma'
+    | '/edital'
     | '/erros'
     | '/planejamento'
     | '/questoes'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CronogramaRoute: typeof CronogramaRoute
+  EditalRoute: typeof EditalRoute
   ErrosRoute: typeof ErrosRoute
   PlanejamentoRoute: typeof PlanejamentoRoute
   QuestoesRoute: typeof QuestoesRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/cronograma'
       fullPath: '/cronograma'
       preLoaderRoute: typeof CronogramaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edital': {
+      id: '/edital'
+      path: '/edital'
+      fullPath: '/edital'
+      preLoaderRoute: typeof EditalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/erros': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CronogramaRoute: CronogramaRoute,
+  EditalRoute: EditalRoute,
   ErrosRoute: ErrosRoute,
   PlanejamentoRoute: PlanejamentoRoute,
   QuestoesRoute: QuestoesRoute,
