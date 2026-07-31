@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Home — Anderson Investigador PCBA" },
       {
         property: "og:description",
-        content: "Painel de estudos PC-BA Investigador: metas diárias, revisões, simulados e estatísticas.",
+        content: "Painel de estudos para o concurso de Investigador da Polícia Civil da Bahia: metas do dia, sequência de estudos, progresso do edital e estatísticas.",
       },
     ],
   }),
