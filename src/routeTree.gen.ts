@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as CronogramaRouteImport } from './routes/cronograma'
+import { Route as EditalRouteImport } from './routes/edital'
+import { Route as ErrosRouteImport } from './routes/erros'
+import { Route as EstatisticasRouteImport } from './routes/estatisticas'
+import { Route as FlashcardsRouteImport } from './routes/flashcards'
+import { Route as FocoRouteImport } from './routes/foco'
+import { Route as PlanejamentoRouteImport } from './routes/planejamento'
+import { Route as QuestoesRouteImport } from './routes/questoes'
+import { Route as RevisoesRouteImport } from './routes/revisoes'
+import { Route as SimuladosRouteImport } from './routes/simulados'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CronogramaRoute = CronogramaRouteImport.update({
+  id: '/cronograma',
+  path: '/cronograma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditalRoute = EditalRouteImport.update({
+  id: '/edital',
+  path: '/edital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ErrosRoute = ErrosRouteImport.update({
+  id: '/erros',
+  path: '/erros',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstatisticasRoute = EstatisticasRouteImport.update({
+  id: '/estatisticas',
+  path: '/estatisticas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashcardsRoute = FlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocoRoute = FocoRouteImport.update({
+  id: '/foco',
+  path: '/foco',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanejamentoRoute = PlanejamentoRouteImport.update({
+  id: '/planejamento',
+  path: '/planejamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestoesRoute = QuestoesRouteImport.update({
+  id: '/questoes',
+  path: '/questoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevisoesRoute = RevisoesRouteImport.update({
+  id: '/revisoes',
+  path: '/revisoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimuladosRoute = SimuladosRouteImport.update({
+  id: '/simulados',
+  path: '/simulados',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
+  '/erros': typeof ErrosRoute
+  '/estatisticas': typeof EstatisticasRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
+  '/erros': typeof ErrosRoute
+  '/estatisticas': typeof EstatisticasRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/cronograma': typeof CronogramaRoute
+  '/edital': typeof EditalRoute
+  '/erros': typeof ErrosRoute
+  '/estatisticas': typeof EstatisticasRoute
+  '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
+  '/planejamento': typeof PlanejamentoRoute
+  '/questoes': typeof QuestoesRoute
+  '/revisoes': typeof RevisoesRoute
+  '/simulados': typeof SimuladosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/cronograma'
+    | '/edital'
+    | '/erros'
+    | '/estatisticas'
+    | '/flashcards'
+    | '/foco'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
+    | '/simulados'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/cronograma'
+    | '/edital'
+    | '/erros'
+    | '/estatisticas'
+    | '/flashcards'
+    | '/foco'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
+    | '/simulados'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/cronograma'
+    | '/edital'
+    | '/erros'
+    | '/estatisticas'
+    | '/flashcards'
+    | '/foco'
+    | '/planejamento'
+    | '/questoes'
+    | '/revisoes'
+    | '/simulados'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  CronogramaRoute: typeof CronogramaRoute
+  EditalRoute: typeof EditalRoute
+  ErrosRoute: typeof ErrosRoute
+  EstatisticasRoute: typeof EstatisticasRoute
+  FlashcardsRoute: typeof FlashcardsRoute
+  FocoRoute: typeof FocoRoute
+  PlanejamentoRoute: typeof PlanejamentoRoute
+  QuestoesRoute: typeof QuestoesRoute
+  RevisoesRoute: typeof RevisoesRoute
+  SimuladosRoute: typeof SimuladosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cronograma': {
+      id: '/cronograma'
+      path: '/cronograma'
+      fullPath: '/cronograma'
+      preLoaderRoute: typeof CronogramaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edital': {
+      id: '/edital'
+      path: '/edital'
+      fullPath: '/edital'
+      preLoaderRoute: typeof EditalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/erros': {
+      id: '/erros'
+      path: '/erros'
+      fullPath: '/erros'
+      preLoaderRoute: typeof ErrosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estatisticas': {
+      id: '/estatisticas'
+      path: '/estatisticas'
+      fullPath: '/estatisticas'
+      preLoaderRoute: typeof EstatisticasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flashcards': {
+      id: '/flashcards'
+      path: '/flashcards'
+      fullPath: '/flashcards'
+      preLoaderRoute: typeof FlashcardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/foco': {
+      id: '/foco'
+      path: '/foco'
+      fullPath: '/foco'
+      preLoaderRoute: typeof FocoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planejamento': {
+      id: '/planejamento'
+      path: '/planejamento'
+      fullPath: '/planejamento'
+      preLoaderRoute: typeof PlanejamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questoes': {
+      id: '/questoes'
+      path: '/questoes'
+      fullPath: '/questoes'
+      preLoaderRoute: typeof QuestoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revisoes': {
+      id: '/revisoes'
+      path: '/revisoes'
+      fullPath: '/revisoes'
+      preLoaderRoute: typeof RevisoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulados': {
+      id: '/simulados'
+      path: '/simulados'
+      fullPath: '/simulados'
+      preLoaderRoute: typeof SimuladosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  CronogramaRoute: CronogramaRoute,
+  EditalRoute: EditalRoute,
+  ErrosRoute: ErrosRoute,
+  EstatisticasRoute: EstatisticasRoute,
+  FlashcardsRoute: FlashcardsRoute,
+  FocoRoute: FocoRoute,
+  PlanejamentoRoute: PlanejamentoRoute,
+  QuestoesRoute: QuestoesRoute,
+  RevisoesRoute: RevisoesRoute,
+  SimuladosRoute: SimuladosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
