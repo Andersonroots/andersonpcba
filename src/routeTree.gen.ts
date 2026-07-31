@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as CronogramaRouteImport } from './routes/cronograma'
 import { Route as EditalRouteImport } from './routes/edital'
 import { Route as ErrosRouteImport } from './routes/erros'
@@ -24,6 +25,11 @@ import { Route as SimuladosRouteImport } from './routes/simulados'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CronogramaRoute = CronogramaRouteImport.update({
@@ -79,6 +85,7 @@ const SimuladosRoute = SimuladosRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/cronograma': typeof CronogramaRoute
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/cronograma': typeof CronogramaRoute
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
   '/cronograma': typeof CronogramaRoute
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/configuracoes'
     | '/cronograma'
     | '/edital'
     | '/erros'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/configuracoes'
     | '/cronograma'
     | '/edital'
     | '/erros'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/configuracoes'
     | '/cronograma'
     | '/edital'
     | '/erros'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
   CronogramaRoute: typeof CronogramaRoute
   EditalRoute: typeof EditalRoute
   ErrosRoute: typeof ErrosRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cronograma': {
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
   CronogramaRoute: CronogramaRoute,
   EditalRoute: EditalRoute,
   ErrosRoute: ErrosRoute,
