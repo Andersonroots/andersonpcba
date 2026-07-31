@@ -57,10 +57,8 @@ function ConfiguracoesPage() {
     setOcupado(false);
   };
 
-  const entrarGoogle = async () => {
-    const { lovable } = await import("@/integrations/lovable");
-    await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-  };
+
+
 
   const exportar = () => {
     const blob = new Blob([JSON.stringify(estado, null, 2)], { type: "application/json" });
