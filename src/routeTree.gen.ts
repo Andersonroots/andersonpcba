@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CronogramaRouteImport } from './routes/cronograma'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
+import { Route as RevisoesRouteImport } from './routes/revisoes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const PlanejamentoRoute = PlanejamentoRouteImport.update({
   path: '/planejamento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RevisoesRoute = RevisoesRouteImport.update({
+  id: '/revisoes',
+  path: '/revisoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/revisoes': typeof RevisoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/revisoes': typeof RevisoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cronograma': typeof CronogramaRoute
   '/planejamento': typeof PlanejamentoRoute
+  '/revisoes': typeof RevisoesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cronograma' | '/planejamento'
+  fullPaths: '/' | '/cronograma' | '/planejamento' | '/revisoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cronograma' | '/planejamento'
-  id: '__root__' | '/' | '/cronograma' | '/planejamento'
+  to: '/' | '/cronograma' | '/planejamento' | '/revisoes'
+  id: '__root__' | '/' | '/cronograma' | '/planejamento' | '/revisoes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CronogramaRoute: typeof CronogramaRoute
   PlanejamentoRoute: typeof PlanejamentoRoute
+  RevisoesRoute: typeof RevisoesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanejamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/revisoes': {
+      id: '/revisoes'
+      path: '/revisoes'
+      fullPath: '/revisoes'
+      preLoaderRoute: typeof RevisoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CronogramaRoute: CronogramaRoute,
   PlanejamentoRoute: PlanejamentoRoute,
+  RevisoesRoute: RevisoesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
