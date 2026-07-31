@@ -14,6 +14,7 @@ import { Route as CronogramaRouteImport } from './routes/cronograma'
 import { Route as EditalRouteImport } from './routes/edital'
 import { Route as ErrosRouteImport } from './routes/erros'
 import { Route as FlashcardsRouteImport } from './routes/flashcards'
+import { Route as FocoRouteImport } from './routes/foco'
 import { Route as PlanejamentoRouteImport } from './routes/planejamento'
 import { Route as QuestoesRouteImport } from './routes/questoes'
 import { Route as RevisoesRouteImport } from './routes/revisoes'
@@ -44,6 +45,11 @@ const FlashcardsRoute = FlashcardsRouteImport.update({
   path: '/flashcards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FocoRoute = FocoRouteImport.update({
+  id: '/foco',
+  path: '/foco',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanejamentoRoute = PlanejamentoRouteImport.update({
   id: '/planejamento',
   path: '/planejamento',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/edital': typeof EditalRoute
   '/erros': typeof ErrosRoute
   '/flashcards': typeof FlashcardsRoute
+  '/foco': typeof FocoRoute
   '/planejamento': typeof PlanejamentoRoute
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/edital'
     | '/erros'
     | '/flashcards'
+    | '/foco'
     | '/planejamento'
     | '/questoes'
     | '/revisoes'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/edital'
     | '/erros'
     | '/flashcards'
+    | '/foco'
     | '/planejamento'
     | '/questoes'
     | '/revisoes'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/edital'
     | '/erros'
     | '/flashcards'
+    | '/foco'
     | '/planejamento'
     | '/questoes'
     | '/revisoes'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   EditalRoute: typeof EditalRoute
   ErrosRoute: typeof ErrosRoute
   FlashcardsRoute: typeof FlashcardsRoute
+  FocoRoute: typeof FocoRoute
   PlanejamentoRoute: typeof PlanejamentoRoute
   QuestoesRoute: typeof QuestoesRoute
   RevisoesRoute: typeof RevisoesRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/foco': {
+      id: '/foco'
+      path: '/foco'
+      fullPath: '/foco'
+      preLoaderRoute: typeof FocoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/planejamento': {
       id: '/planejamento'
       path: '/planejamento'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditalRoute: EditalRoute,
   ErrosRoute: ErrosRoute,
   FlashcardsRoute: FlashcardsRoute,
+  FocoRoute: FocoRoute,
   PlanejamentoRoute: PlanejamentoRoute,
   QuestoesRoute: QuestoesRoute,
   RevisoesRoute: RevisoesRoute,
