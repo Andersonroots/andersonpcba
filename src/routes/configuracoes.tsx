@@ -154,9 +154,6 @@ function ConfiguracoesPage() {
               <Botao variante="suave" disabled={ocupado} onClick={() => entrar("cadastro")}>
                 Criar conta
               </Botao>
-              <Botao variante="contorno" onClick={entrarGoogle}>
-                Entrar com Google
-              </Botao>
             </div>
           </div>
         )}
