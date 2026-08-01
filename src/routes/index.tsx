@@ -89,8 +89,12 @@ function HomePage() {
         <div className="flex gap-3">
           <Quote className="mt-1 h-5 w-5 shrink-0 text-primary" />
           <div>
-            <p className="text-[15px] font-medium italic">“{versiculo.texto}”</p>
-            <p className="mt-1 text-xs font-semibold text-primary">{versiculo.ref}</p>
+            <p className="text-[15px] font-medium italic" suppressHydrationWarning>
+              “{versiculo.texto}”
+            </p>
+            <p className="mt-1 text-xs font-semibold text-primary" suppressHydrationWarning>
+              {versiculo.ref}
+            </p>
           </div>
         </div>
       </Cartao>

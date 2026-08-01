@@ -232,26 +232,43 @@ export function gerarPlano({ inicio, progresso, pins, hoje }: PlanoInput): Dia[]
     const slots: Slot[] = [];
     const passado = cursor < hoje;
 
-    if (passado) {
-      // histórico: apenas o que foi realmente concluído
-      (concluidosPorDia[cursor] || []).forEach((id) => {
+    // metas já concluídas continuam visíveis no dia em que foram marcadas
+    const concluidosDoDia: Slot[] = (concluidosPorDia[cursor] || [])
+      .map((id) => {
         const s = SESSOES_MESTRE.find((x) => x.id === id);
-        if (s) slots.push(enriquecer(s));
-        else if (id.includes("@")) {
+        if (s) return enriquecer(s);
+        if (id.includes("@")) {
           const [base] = id.split("@");
-          if (base === "simulado") slots.push(slotFixo("simulado", "simulado", "Simulado completo (4h)", 240, cursor));
-          else slots.push(slotFixo("revsem", "revisaoSemanal", "Revisão em questões da semana", 60, cursor));
+          if (base === "simulado")
+            return slotFixo("simulado", "simulado", "Simulado completo — 60 questões (4h)", 180, cursor);
+          if (base === "correcao")
+            return slotFixo("correcao", "revisaoSemanal", "Correção do simulado + caderno de erros", 60, cursor);
+          return slotFixo("revsem", "revisaoSemanal", "Revisão em questões das matérias da semana", 60, cursor);
         }
-      });
+        return null;
+      })
+      .filter((x): x is Slot => !!x);
+
+    if (passado) {
+      slots.push(...concluidosDoDia);
     } else if (tipo === "domingo") {
       const sim = slotFixo("simulado", "simulado", "Simulado completo — 60 questões (4h)", 180, cursor);
       const corr = slotFixo("correcao", "revisaoSemanal", "Correção do simulado + caderno de erros", 60, cursor);
+      slots.push(...concluidosDoDia);
       if (!feitos.has(sim.id)) slots.push(sim);
       if (!feitos.has(corr.id)) slots.push(corr);
     } else {
       let usados = 0;
       const discsHoje: string[] = [];
       const maxSlots = tipo === "semana" ? 3 : 4;
+
+      // 0) metas já concluídas neste dia ocupam suas vagas
+      concluidosDoDia.forEach((slot) => {
+        slots.push(slot);
+        usados += slot.minutos;
+        discsHoje.push(slot.disciplinaId);
+        semanaCount[semanaKey][slot.disciplinaId] = (semanaCount[semanaKey][slot.disciplinaId] || 0) + 1;
+      });
 
       // 1) slots fixados manualmente (arrastados) nesta data
       (pinPorData[cursor] || []).forEach((id) => {
