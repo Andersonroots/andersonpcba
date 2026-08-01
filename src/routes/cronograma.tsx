@@ -175,6 +175,19 @@ function CronogramaPage() {
                 })}
               </div>
 
+              {dia.data >= hoje && dia.slots.length > 0 && feitos === dia.slots.length && (
+                <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-primary/10 p-3">
+                  <p className="text-sm font-semibold">
+                    Dia concluído! Quer adiantar as metas do próximo dia para hoje?
+                  </p>
+                  <Botao className="ml-auto" onClick={() => adiantar(dia.data)}>
+                    Adiantar metas
+                  </Botao>
+                </div>
+              )}
+
+
+
               {dia.data >= hoje && (
                 <div className="mt-3 rounded-xl border border-dashed border-border p-3">
                   <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
