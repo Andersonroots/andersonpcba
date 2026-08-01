@@ -40,6 +40,19 @@ function CronogramaPage() {
     .filter((d) => d.data >= hoje)
     .reduce((a, d) => a + d.slots.filter((s) => !estado.progresso[s.id]?.feito).length, 0);
 
+  const adiantar = (data: string) => {
+    const prox = plano.find((d) => d.data > data && d.slots.some((s) => !estado.progresso[s.id]?.feito));
+    if (!prox) return;
+    const ids = prox.slots.filter((s) => !estado.progresso[s.id]?.feito && s.topicoId).map((s) => s.id);
+    if (ids.length === 0) return;
+    set((e) => {
+      const pins = { ...e.pins };
+      ids.forEach((id) => (pins[id] = data));
+      return { ...e, pins };
+    });
+  };
+
+
   return (
     <div className="space-y-5">
       <Titulo sub="Marque cada meta ao terminar. Se adiantar, o plano se recompacta sozinho para os próximos dias.">
