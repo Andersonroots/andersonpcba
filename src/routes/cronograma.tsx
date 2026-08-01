@@ -26,7 +26,7 @@ export const Route = createFileRoute("/cronograma")({
 });
 
 function CronogramaPage() {
-  const { plano, hoje, estado, concluir, moverSlot, reorganizar } = useStore();
+  const { plano, hoje, estado, set, concluir, moverSlot, reorganizar } = useStore();
   const [offset, setOffset] = useState(0);
   const [quantos, setQuantos] = useState(10);
 
