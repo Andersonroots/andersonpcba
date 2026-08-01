@@ -41,9 +41,12 @@ function CronogramaPage() {
     .reduce((a, d) => a + d.slots.filter((s) => !estado.progresso[s.id]?.feito).length, 0);
 
   const adiantar = (data: string) => {
-    const prox = plano.find((d) => d.data > data && d.slots.some((s) => !estado.progresso[s.id]?.feito));
+    // procura o próximo dia que tenha metas movíveis (tópicos do edital)
+    const prox = plano.find(
+      (d) => d.data > data && d.slots.some((s) => s.topicoId && !estado.progresso[s.id]?.feito),
+    );
     if (!prox) return;
-    const ids = prox.slots.filter((s) => !estado.progresso[s.id]?.feito && s.topicoId).map((s) => s.id);
+    const ids = prox.slots.filter((s) => s.topicoId && !estado.progresso[s.id]?.feito).map((s) => s.id);
     if (ids.length === 0) return;
     set((e) => {
       const pins = { ...e.pins };
@@ -51,6 +54,7 @@ function CronogramaPage() {
       return { ...e, pins };
     });
   };
+
 
 
   return (
