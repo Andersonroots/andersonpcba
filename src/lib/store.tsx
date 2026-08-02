@@ -214,7 +214,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreCtx.Provider
-      value={{ estado, set, plano, hoje, usuario, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, pronto }}
+      value={{ estado, set, plano, hoje, usuario, authPronto, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, pronto }}
     >
       {children}
     </StoreCtx.Provider>
