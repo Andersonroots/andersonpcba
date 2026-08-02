@@ -4,6 +4,8 @@ import { Cloud, Download, LogOut, Palette, Trash2, Upload } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { AreaTexto, Botao, Campo, Cartao, Titulo } from "@/components/ui-app";
 import { supabase } from "@/integrations/supabase/client";
+import { DriveCard } from "@/components/DriveCard";
+
 
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
