@@ -127,6 +127,10 @@ function ConfiguracoesPage() {
         {msg && <p className="mt-3 text-xs font-medium text-primary">{msg}</p>}
       </Cartao>
 
+      <DriveCard />
+
+
+
       <Cartao>
         <h3 className="mb-3 font-bold">Backup dos dados</h3>
         <div className="flex flex-wrap items-center gap-3">
