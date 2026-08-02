@@ -36,26 +36,8 @@ const TEMAS = [
 
 function ConfiguracoesPage() {
   const { estado, set, usuario, ultimaSync, sincronizando } = useStore();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
-  const [ocupado, setOcupado] = useState(false);
 
-  const entrar = async (modo: "login" | "cadastro") => {
-    setOcupado(true);
-    setMsg(null);
-    const fn =
-      modo === "login"
-        ? supabase.auth.signInWithPassword({ email, password: senha })
-        : supabase.auth.signUp({
-            email,
-            password: senha,
-            options: { emailRedirectTo: window.location.origin },
-          });
-    const { error } = await fn;
-    setMsg(error ? error.message : modo === "login" ? "Conectado!" : "Confira seu e-mail para confirmar a conta.");
-    setOcupado(false);
-  };
 
 
 
