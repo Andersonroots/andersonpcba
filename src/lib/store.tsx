@@ -118,14 +118,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // sessão da nuvem
   useEffect(() => {
+    const mapear = (u: { id: string; email?: string | null; user_metadata?: Record<string, unknown> } | null) =>
+      u
+        ? {
+            id: u.id,
+            email: u.email ?? undefined,
+            nome: (u.user_metadata?.full_name as string | undefined) ?? (u.user_metadata?.name as string | undefined),
+            avatar: (u.user_metadata?.avatar_url as string | undefined) ?? (u.user_metadata?.picture as string | undefined),
+          }
+        : null;
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) setUsuario({ id: data.session.user.id, email: data.session.user.email ?? undefined });
+      setUsuario(mapear(data.session?.user ?? null));
+      setAuthPronto(true);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUsuario(session?.user ? { id: session.user.id, email: session.user.email ?? undefined } : null);
+      setUsuario(mapear(session?.user ?? null));
+      setAuthPronto(true);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
 
   // baixa da nuvem ao logar
   useEffect(() => {
