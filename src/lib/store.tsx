@@ -80,7 +80,8 @@ interface Ctx {
   set: (fn: (e: Estado) => Estado) => void;
   plano: Dia[];
   hoje: string;
-  usuario: { id: string; email?: string } | null;
+  usuario: { id: string; email?: string; nome?: string; avatar?: string } | null;
+  authPronto: boolean;
   sincronizando: boolean;
   ultimaSync: string | null;
   concluir: (slotId: string, data: string, feito: boolean) => void;
