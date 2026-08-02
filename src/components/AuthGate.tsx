@@ -4,17 +4,18 @@ import { useStore } from "@/lib/store";
 import { lovable } from "@/integrations/lovable/index";
 
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { usuario, authPronto } = useStore();
+  const { usuario, authPronto, pronto } = useStore();
   const [erro, setErro] = useState<string | null>(null);
   const [ocupado, setOcupado] = useState(false);
 
-  if (!authPronto) {
+  if (!authPronto || !pronto) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-sm text-muted-foreground">Carregando…</p>
       </div>
     );
   }
+
 
   if (usuario) return <>{children}</>;
 
