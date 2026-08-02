@@ -95,7 +95,9 @@ const StoreCtx = createContext<Ctx | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [estado, setEstado] = useState<Estado>(ESTADO_INICIAL);
   const [pronto, setPronto] = useState(false);
-  const [usuario, setUsuario] = useState<{ id: string; email?: string } | null>(null);
+  const [usuario, setUsuario] = useState<{ id: string; email?: string; nome?: string; avatar?: string } | null>(null);
+  const [authPronto, setAuthPronto] = useState(false);
+
   const [sincronizando, setSincronizando] = useState(false);
   const [ultimaSync, setUltimaSync] = useState<string | null>(null);
   const [hoje, setHoje] = useState(hojeIso());
