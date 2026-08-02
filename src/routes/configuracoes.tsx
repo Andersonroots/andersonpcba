@@ -36,26 +36,8 @@ const TEMAS = [
 
 function ConfiguracoesPage() {
   const { estado, set, usuario, ultimaSync, sincronizando } = useStore();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
-  const [ocupado, setOcupado] = useState(false);
 
-  const entrar = async (modo: "login" | "cadastro") => {
-    setOcupado(true);
-    setMsg(null);
-    const fn =
-      modo === "login"
-        ? supabase.auth.signInWithPassword({ email, password: senha })
-        : supabase.auth.signUp({
-            email,
-            password: senha,
-            options: { emailRedirectTo: window.location.origin },
-          });
-    const { error } = await fn;
-    setMsg(error ? error.message : modo === "login" ? "Conectado!" : "Confira seu e-mail para confirmar a conta.");
-    setOcupado(false);
-  };
 
 
 
@@ -129,34 +111,19 @@ function ConfiguracoesPage() {
         {usuario ? (
           <div className="space-y-3">
             <p className="text-sm">
-              Conectado como <span className="font-semibold">{usuario.email ?? "usuário"}</span>
+              Conectado como <span className="font-semibold">{usuario.nome ?? usuario.email ?? "usuário"}</span>
             </p>
             <p className="text-xs text-muted-foreground">
               {sincronizando ? "Sincronizando…" : ultimaSync ? `Último salvamento: ${ultimaSync}` : "Aguardando alterações."}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Seus dados ficam salvos na nuvem e aparecem iguais no celular, tablet e computador ao entrar com esta mesma conta Google.
             </p>
             <Botao variante="contorno" onClick={() => supabase.auth.signOut()}>
               <LogOut className="h-4 w-4" /> Sair
             </Botao>
           </div>
-        ) : (
-          <div className="space-y-3">
-            <p className="text-xs text-muted-foreground">
-              Entre para salvar o progresso na nuvem e continuar de qualquer aparelho.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Campo label="E-mail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-              <Campo label="Senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Botao disabled={ocupado} onClick={() => entrar("login")}>
-                Entrar
-              </Botao>
-              <Botao variante="suave" disabled={ocupado} onClick={() => entrar("cadastro")}>
-                Criar conta
-              </Botao>
-            </div>
-          </div>
-        )}
+        ) : null}
         {msg && <p className="mt-3 text-xs font-medium text-primary">{msg}</p>}
       </Cartao>
 

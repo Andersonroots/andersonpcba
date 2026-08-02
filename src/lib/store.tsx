@@ -80,7 +80,8 @@ interface Ctx {
   set: (fn: (e: Estado) => Estado) => void;
   plano: Dia[];
   hoje: string;
-  usuario: { id: string; email?: string } | null;
+  usuario: { id: string; email?: string; nome?: string; avatar?: string } | null;
+  authPronto: boolean;
   sincronizando: boolean;
   ultimaSync: string | null;
   concluir: (slotId: string, data: string, feito: boolean) => void;
@@ -94,7 +95,9 @@ const StoreCtx = createContext<Ctx | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [estado, setEstado] = useState<Estado>(ESTADO_INICIAL);
   const [pronto, setPronto] = useState(false);
-  const [usuario, setUsuario] = useState<{ id: string; email?: string } | null>(null);
+  const [usuario, setUsuario] = useState<{ id: string; email?: string; nome?: string; avatar?: string } | null>(null);
+  const [authPronto, setAuthPronto] = useState(false);
+
   const [sincronizando, setSincronizando] = useState(false);
   const [ultimaSync, setUltimaSync] = useState<string | null>(null);
   const [hoje, setHoje] = useState(hojeIso());
@@ -115,14 +118,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // sessão da nuvem
   useEffect(() => {
+    const mapear = (u: { id: string; email?: string | null; user_metadata?: Record<string, unknown> } | null) =>
+      u
+        ? {
+            id: u.id,
+            email: u.email ?? undefined,
+            nome: (u.user_metadata?.full_name as string | undefined) ?? (u.user_metadata?.name as string | undefined),
+            avatar: (u.user_metadata?.avatar_url as string | undefined) ?? (u.user_metadata?.picture as string | undefined),
+          }
+        : null;
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) setUsuario({ id: data.session.user.id, email: data.session.user.email ?? undefined });
+      setUsuario(mapear(data.session?.user ?? null));
+      setAuthPronto(true);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUsuario(session?.user ? { id: session.user.id, email: session.user.email ?? undefined } : null);
+      setUsuario(mapear(session?.user ?? null));
+      setAuthPronto(true);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
 
   // baixa da nuvem ao logar
   useEffect(() => {
@@ -199,7 +214,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return (
     <StoreCtx.Provider
-      value={{ estado, set, plano, hoje, usuario, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, pronto }}
+      value={{ estado, set, plano, hoje, usuario, authPronto, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, pronto }}
     >
       {children}
     </StoreCtx.Provider>
