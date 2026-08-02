@@ -4,6 +4,8 @@ import { Cloud, Download, LogOut, Palette, Trash2, Upload } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { AreaTexto, Botao, Campo, Cartao, Titulo } from "@/components/ui-app";
 import { supabase } from "@/integrations/supabase/client";
+import { DriveCard } from "@/components/DriveCard";
+
 
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
@@ -126,6 +128,10 @@ function ConfiguracoesPage() {
         ) : null}
         {msg && <p className="mt-3 text-xs font-medium text-primary">{msg}</p>}
       </Cartao>
+
+      <DriveCard />
+
+
 
       <Cartao>
         <h3 className="mb-3 font-bold">Backup dos dados</h3>

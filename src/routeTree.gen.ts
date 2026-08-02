@@ -21,6 +21,7 @@ import { Route as PlanejamentoRouteImport } from './routes/planejamento'
 import { Route as QuestoesRouteImport } from './routes/questoes'
 import { Route as RevisoesRouteImport } from './routes/revisoes'
 import { Route as SimuladosRouteImport } from './routes/simulados'
+import { Route as OauthGoogleDriveReturnRouteImport } from './routes/oauth/google-drive/return'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +83,11 @@ const SimuladosRoute = SimuladosRouteImport.update({
   path: '/simulados',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OauthGoogleDriveReturnRoute = OauthGoogleDriveReturnRouteImport.update({
+  id: '/oauth/google-drive/return',
+  path: '/oauth/google-drive/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
   '/simulados': typeof SimuladosRoute
+  '/oauth/google-drive/return': typeof OauthGoogleDriveReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
   '/simulados': typeof SimuladosRoute
+  '/oauth/google-drive/return': typeof OauthGoogleDriveReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/questoes': typeof QuestoesRoute
   '/revisoes': typeof RevisoesRoute
   '/simulados': typeof SimuladosRoute
+  '/oauth/google-drive/return': typeof OauthGoogleDriveReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/questoes'
     | '/revisoes'
     | '/simulados'
+    | '/oauth/google-drive/return'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
     | '/questoes'
     | '/revisoes'
     | '/simulados'
+    | '/oauth/google-drive/return'
   id:
     | '__root__'
     | '/'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/questoes'
     | '/revisoes'
     | '/simulados'
+    | '/oauth/google-drive/return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +196,7 @@ export interface RootRouteChildren {
   QuestoesRoute: typeof QuestoesRoute
   RevisoesRoute: typeof RevisoesRoute
   SimuladosRoute: typeof SimuladosRoute
+  OauthGoogleDriveReturnRoute: typeof OauthGoogleDriveReturnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SimuladosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oauth/google-drive/return': {
+      id: '/oauth/google-drive/return'
+      path: '/oauth/google-drive/return'
+      fullPath: '/oauth/google-drive/return'
+      preLoaderRoute: typeof OauthGoogleDriveReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,17 +308,8 @@ const rootRouteChildren: RootRouteChildren = {
   QuestoesRoute: QuestoesRoute,
   RevisoesRoute: RevisoesRoute,
   SimuladosRoute: SimuladosRoute,
+  OauthGoogleDriveReturnRoute: OauthGoogleDriveReturnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
