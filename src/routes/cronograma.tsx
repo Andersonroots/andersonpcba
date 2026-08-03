@@ -324,6 +324,9 @@ function CronogramaPage() {
           Mostrar mais dias
         </Botao>
       </div>
+        </>
+      )}
     </div>
+
   );
 }
