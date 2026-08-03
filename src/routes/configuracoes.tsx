@@ -5,6 +5,16 @@ import { useStore } from "@/lib/store";
 import { AreaTexto, Botao, Campo, Cartao, Titulo } from "@/components/ui-app";
 import { supabase } from "@/integrations/supabase/client";
 import { DriveCard } from "@/components/DriveCard";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 export const Route = createFileRoute("/configuracoes")({
