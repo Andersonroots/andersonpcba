@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { Flame, Target, Clock, CheckCircle2, TrendingUp, Quote } from "lucide-react";
+import { Flame, Target, Clock, CheckCircle2, TrendingUp, Quote, Calendar } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Cartao, Metrica, Titulo } from "@/components/ui-app";
 import { DISCIPLINAS, getDisciplina, selo } from "@/data/edital";
 import { SESSOES_MESTRE, TIPO_LABEL, addDays, formatarData } from "@/lib/plano";
 import { VERSICULOS } from "@/data/motivacao";
+
+const DATA_PROVA = "2026-12-06";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -79,6 +82,13 @@ function HomePage() {
   const pctHoje = totalHoje ? Math.round((feitosHoje / totalHoje) * 100) : 0;
   const fim = plano.length ? plano[plano.length - 1].data : hoje;
 
+  const diasAteProva = useMemo(() => {
+    const hojeDate = new Date(hoje);
+    const provaDate = new Date(DATA_PROVA);
+    const diff = Math.ceil((provaDate.getTime() - hojeDate.getTime()) / (1000 * 60 * 60 * 24));
+    return diff;
+  }, [hoje]);
+
   return (
     <div className="space-y-5">
       <Titulo sub="Foco total: 500 vagas, prova em 06/12/2026. Um dia de cada vez.">
@@ -94,6 +104,22 @@ function HomePage() {
             </p>
             <p className="mt-1 text-xs font-semibold text-primary" suppressHydrationWarning>
               {versiculo.ref}
+            </p>
+          </div>
+        </div>
+      </Cartao>
+
+      <Cartao className="border-l-4" cor="var(--color-destructive)">
+        <div className="flex items-center gap-3">
+          <div className="rounded-xl bg-destructive/15 p-2">
+            <Calendar className="h-5 w-5 text-destructive" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">
+              {diasAteProva > 0 ? `${diasAteProva} dias` : diasAteProva === 0 ? "Hoje!" : `${Math.abs(diasAteProva)} dias atrás`}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              {diasAteProva > 0 ? "até a prova do PC-BA (06/12/2026)" : diasAteProva === 0 ? "boa sorte na prova!" : "prova já realizada"}
             </p>
           </div>
         </div>
