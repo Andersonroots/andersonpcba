@@ -87,6 +87,7 @@ interface Ctx {
   concluir: (slotId: string, data: string, feito: boolean) => void;
   moverSlot: (slotId: string, data: string) => void;
   reorganizar: () => void;
+  zerarTudo: () => Promise<void>;
   pronto: boolean;
 }
 
