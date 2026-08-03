@@ -109,6 +109,22 @@ function HomePage() {
         </div>
       </Cartao>
 
+      <Cartao className="border-l-4" cor="var(--color-destructive)">
+        <div className="flex items-center gap-3">
+          <div className="rounded-xl bg-destructive/15 p-2">
+            <Calendar className="h-5 w-5 text-destructive" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">
+              {diasAteProva > 0 ? `${diasAteProva} dias` : diasAteProva === 0 ? "Hoje!" : `${Math.abs(diasAteProva)} dias atrás`}
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              {diasAteProva > 0 ? "até a prova do PC-BA (06/12/2026)" : diasAteProva === 0 ? "boa sorte na prova!" : "prova já realizada"}
+            </p>
+          </div>
+        </div>
+      </Cartao>
+
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Cartao>
           <div className="flex items-center gap-3">
