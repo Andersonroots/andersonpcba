@@ -175,7 +175,7 @@ function ErrosPage() {
                 e.target.value = "";
               }}
             />
-            <Botao variante="secundario" onClick={() => inputArquivo.current?.click()}>
+            <Botao variante="contorno" onClick={() => inputArquivo.current?.click()}>
               <ImagePlus className="h-4 w-4" /> Anexar imagem / print
             </Botao>
             <p className="mt-1 text-[11px] text-muted-foreground">
