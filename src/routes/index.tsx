@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { Flame, Target, Clock, CheckCircle2, TrendingUp, Quote } from "lucide-react";
+import { Flame, Target, Clock, CheckCircle2, TrendingUp, Quote, Calendar } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Cartao, Metrica, Titulo } from "@/components/ui-app";
 import { DISCIPLINAS, getDisciplina, selo } from "@/data/edital";
 import { SESSOES_MESTRE, TIPO_LABEL, addDays, formatarData } from "@/lib/plano";
 import { VERSICULOS } from "@/data/motivacao";
+
+const DATA_PROVA = "2026-12-06";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
