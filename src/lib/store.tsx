@@ -213,10 +213,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setEstado((e) => ({ ...e, pins: {}, inicio: e.inicio }));
   }, []);
 
+  const zerarTudo = useCallback(async () => {
+    const novo: Estado = { ...ESTADO_INICIAL, inicio: hojeIso(), tema: estado.tema };
+    setEstado(novo);
+    try {
+      localStorage.removeItem(CHAVE);
+      localStorage.setItem(CHAVE, JSON.stringify(novo));
+    } catch {
+      /* ignore */
+    }
+    if (usuario) {
+      setSincronizando(true);
+      await supabase
+        .from("estudo_estado")
+        .upsert({ user_id: usuario.id, dados: novo as never, atualizado_em: new Date().toISOString() });
+      setSincronizando(false);
+      setUltimaSync(new Date().toLocaleTimeString("pt-BR"));
+    }
+  }, [usuario, estado.tema]);
+
   return (
     <StoreCtx.Provider
-      value={{ estado, set, plano, hoje, usuario, authPronto, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, pronto }}
+      value={{ estado, set, plano, hoje, usuario, authPronto, sincronizando, ultimaSync, concluir, moverSlot, reorganizar, zerarTudo, pronto }}
     >
+
       {children}
     </StoreCtx.Provider>
   );
