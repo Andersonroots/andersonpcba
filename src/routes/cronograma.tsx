@@ -29,6 +29,7 @@ function CronogramaPage() {
   const { plano, hoje, estado, set, concluir, moverSlot, reorganizar } = useStore();
   const [offset, setOffset] = useState(0);
   const [quantos, setQuantos] = useState(10);
+  const [aba, setAba] = useState<"agenda" | "estudados">("agenda");
 
   const inicio = addDays(hoje, offset);
   const dias = useMemo(
@@ -36,9 +37,29 @@ function CronogramaPage() {
     [plano, inicio, quantos],
   );
 
+  const estudados = useMemo(() => {
+    const lista = plano
+      .flatMap((d) => d.slots.map((s) => ({ slot: s, data: estado.progresso[s.id]?.data ?? d.data })))
+      .filter(({ slot }) => estado.progresso[slot.id]?.feito);
+    const grupos = new Map<string, typeof lista>();
+    lista.forEach((item) => {
+      const atual = grupos.get(item.data) ?? [];
+      atual.push(item);
+      grupos.set(item.data, atual);
+    });
+    return [...grupos.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1));
+  }, [plano, estado.progresso]);
+
+  const totalEstudados = estudados.reduce((a, [, itens]) => a + itens.length, 0);
+  const minutosEstudados = estudados.reduce(
+    (a, [, itens]) => a + itens.reduce((x, i) => x + i.slot.minutos, 0),
+    0,
+  );
+
   const restantes = plano
     .filter((d) => d.data >= hoje)
     .reduce((a, d) => a + d.slots.filter((s) => !estado.progresso[s.id]?.feito).length, 0);
+
 
   const adiantar = (data: string) => {
     // procura o próximo dia que tenha metas movíveis (tópicos do edital)
