@@ -29,6 +29,7 @@ export interface Erro {
   porqueErrei: string;
   correto: string;
   revisado: boolean;
+  imagens?: string[];
 }
 
 export interface Simulado {
