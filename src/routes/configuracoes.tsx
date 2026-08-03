@@ -37,8 +37,10 @@ const TEMAS = [
 ];
 
 function ConfiguracoesPage() {
-  const { estado, set, usuario, ultimaSync, sincronizando } = useStore();
+  const { estado, set, usuario, ultimaSync, sincronizando, zerarTudo } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
+  const [confirmarZerar, setConfirmarZerar] = useState(false);
+  const [zerando, setZerando] = useState(false);
 
 
 
