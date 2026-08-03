@@ -5,6 +5,16 @@ import { useStore } from "@/lib/store";
 import { AreaTexto, Botao, Campo, Cartao, Titulo } from "@/components/ui-app";
 import { supabase } from "@/integrations/supabase/client";
 import { DriveCard } from "@/components/DriveCard";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 export const Route = createFileRoute("/configuracoes")({
@@ -37,8 +47,10 @@ const TEMAS = [
 ];
 
 function ConfiguracoesPage() {
-  const { estado, set, usuario, ultimaSync, sincronizando } = useStore();
+  const { estado, set, usuario, ultimaSync, sincronizando, zerarTudo } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
+  const [confirmarZerar, setConfirmarZerar] = useState(false);
+  const [zerando, setZerando] = useState(false);
 
 
 
@@ -152,19 +164,43 @@ function ConfiguracoesPage() {
               }}
             />
           </label>
-          <Botao
-            variante="perigo"
-            onClick={() => {
-              if (confirm("Apagar TODO o progresso deste aparelho?")) {
-                localStorage.removeItem("pcba-anderson-v1");
-                location.reload();
-              }
-            }}
-          >
+          <Botao variante="perigo" onClick={() => setConfirmarZerar(true)}>
             <Trash2 className="h-4 w-4" /> Zerar tudo
           </Botao>
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Zerar apaga cronograma, questões, erros, simulados, flashcards e pomodoro — neste aparelho e na nuvem.
+        </p>
       </Cartao>
+
+      <AlertDialog open={confirmarZerar} onOpenChange={setConfirmarZerar}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Zerar todos os dados?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Isso apaga definitivamente o progresso do cronograma, o histórico de questões, o caderno de erros, os
+              simulados, os flashcards e os minutos de pomodoro — neste aparelho e também na nuvem. Não dá para desfazer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={zerando}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={zerando}
+              onClick={async (e) => {
+                e.preventDefault();
+                setZerando(true);
+                await zerarTudo();
+                setZerando(false);
+                setConfirmarZerar(false);
+                setMsg("Tudo zerado com sucesso.");
+              }}
+            >
+              {zerando ? "Zerando…" : "Sim, zerar tudo"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
+
