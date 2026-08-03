@@ -82,6 +82,13 @@ function HomePage() {
   const pctHoje = totalHoje ? Math.round((feitosHoje / totalHoje) * 100) : 0;
   const fim = plano.length ? plano[plano.length - 1].data : hoje;
 
+  const diasAteProva = useMemo(() => {
+    const hojeDate = new Date(hoje);
+    const provaDate = new Date(DATA_PROVA);
+    const diff = Math.ceil((provaDate.getTime() - hojeDate.getTime()) / (1000 * 60 * 60 * 24));
+    return diff;
+  }, [hoje]);
+
   return (
     <div className="space-y-5">
       <Titulo sub="Foco total: 500 vagas, prova em 06/12/2026. Um dia de cada vez.">
