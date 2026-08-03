@@ -152,17 +152,10 @@ function ConfiguracoesPage() {
               }}
             />
           </label>
-          <Botao
-            variante="perigo"
-            onClick={() => {
-              if (confirm("Apagar TODO o progresso deste aparelho?")) {
-                localStorage.removeItem("pcba-anderson-v1");
-                location.reload();
-              }
-            }}
-          >
+          <Botao variante="perigo" onClick={() => setConfirmarZerar(true)}>
             <Trash2 className="h-4 w-4" /> Zerar tudo
           </Botao>
+
         </div>
       </Cartao>
     </div>
