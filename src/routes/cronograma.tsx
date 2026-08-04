@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, CalendarDays, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, CalendarDays, RefreshCw, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Botao, Cartao, Titulo } from "@/components/ui-app";
 import { getDisciplina, getTopico, MODO_LABEL, selo } from "@/data/edital";
