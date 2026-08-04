@@ -30,18 +30,31 @@ function PlanejamentoPage() {
   const [mesRef, setMesRef] = useState(() => hoje.slice(0, 7));
   const [selecionado, setSelecionado] = useState<string | null>(hoje);
   const [busca, setBusca] = useState("");
+  const [pesquisa, setPesquisa] = useState("");
 
-  const buscaNorm = busca.trim().toLowerCase();
+  const normalizar = (valor: string) =>
+    valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const buscaNorm = normalizar(pesquisa.trim());
   const matchBusca = (s: { titulo: string; disciplinaNome: string; disciplinaId: string; topicoId?: string | null }) => {
     if (!buscaNorm) return true;
     const d = getDisciplina(s.disciplinaId);
     return (
-      s.titulo.toLowerCase().includes(buscaNorm) ||
-      s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
-      (d?.curto?.toLowerCase().includes(buscaNorm) ?? false) ||
-      (d?.nome?.toLowerCase().includes(buscaNorm) ?? false)
+      normalizar(s.titulo).includes(buscaNorm) ||
+      normalizar(s.disciplinaNome).includes(buscaNorm) ||
+      (d?.curto ? normalizar(d.curto).includes(buscaNorm) : false) ||
+      (d?.nome ? normalizar(d.nome).includes(buscaNorm) : false)
     );
   };
+
+  const resultados = useMemo(
+    () =>
+      buscaNorm
+        ? plano.flatMap((dia) =>
+            dia.slots.filter(matchBusca).map((slot) => ({ data: dia.data, slot })),
+          )
+        : [],
+    [plano, buscaNorm],
+  );
 
   const [ano, mes] = mesRef.split("-").map(Number);
 
@@ -70,16 +83,60 @@ function PlanejamentoPage() {
         Planejamento
       </Titulo>
 
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          placeholder="Pesquisar tema, disciplina ou palavra-chave..."
-          className="w-full rounded-xl border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
-        />
-      </div>
+      <form
+        className="flex flex-col gap-2 sm:flex-row"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setPesquisa(busca.trim());
+        }}
+      >
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="search"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Pesquisar tema, disciplina ou palavra-chave..."
+            className="w-full rounded-xl border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+          />
+        </div>
+        <Botao type="submit">
+          <Search className="h-4 w-4" /> Pesquisar
+        </Botao>
+      </form>
+
+      {buscaNorm && (
+        <Cartao>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h3 className="font-bold">Resultados para “{pesquisa}”</h3>
+            <span className="text-xs text-muted-foreground">{resultados.length} temas</span>
+          </div>
+          {resultados.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhum tema encontrado.</p>
+          ) : (
+            <div className="space-y-2">
+              {resultados.map(({ data, slot }) => {
+                const d = getDisciplina(slot.disciplinaId);
+                return (
+                  <div
+                    key={`${data}-${slot.id}`}
+                    className="rounded-xl p-3 text-neutral-800"
+                    style={{
+                      background: d?.cor ?? "var(--color-muted)",
+                      borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
+                    }}
+                  >
+                    <p className="text-[11px] font-bold uppercase" style={{ color: d?.corForte }}>
+                      {d?.curto ?? slot.disciplinaNome} · {formatarData(data)} · {slot.minutos}min
+                    </p>
+                    <p className="text-sm font-medium">{slot.titulo}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Cartao>
+      )}
 
       <Cartao>
         <div className="mb-4 flex items-center gap-3">
