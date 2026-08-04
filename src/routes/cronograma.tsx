@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, CalendarDays, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, CalendarDays, RefreshCw, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Botao, Cartao, Titulo } from "@/components/ui-app";
 import { getDisciplina, getTopico, MODO_LABEL, selo } from "@/data/edital";
@@ -30,6 +30,21 @@ function CronogramaPage() {
   const [offset, setOffset] = useState(0);
   const [quantos, setQuantos] = useState(10);
   const [aba, setAba] = useState<"agenda" | "estudados">("agenda");
+  const [busca, setBusca] = useState("");
+
+  const buscaNorm = busca.trim().toLowerCase();
+  const matchBusca = (s: { titulo: string; disciplinaNome: string; topicoId?: string | null; disciplinaId: string }) => {
+    if (!buscaNorm) return true;
+    const d = getDisciplina(s.disciplinaId);
+    const t = s.topicoId ? getTopico(s.topicoId) : null;
+    return (
+      s.titulo.toLowerCase().includes(buscaNorm) ||
+      s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
+      (d?.curto?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (d?.nome?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (t?.f?.some((f) => f.toLowerCase().includes(buscaNorm)) ?? false)
+    );
+  };
 
   const inicio = addDays(hoje, offset);
   const dias = useMemo(
@@ -101,6 +116,17 @@ function CronogramaPage() {
         ))}
       </div>
 
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Pesquisar tema, disciplina ou palavra-chave..."
+          className="w-full rounded-xl border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+        />
+      </div>
+
       {aba === "estudados" ? (
         <div className="space-y-4">
           <Cartao>
@@ -126,53 +152,62 @@ function CronogramaPage() {
             </Cartao>
           )}
 
-          {estudados.map(([data, itens]) => (
-            <Cartao key={data}>
-              <div className="mb-3 flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-primary" />
-                <h3 className="font-bold">{formatarData(data)}</h3>
-                <span className="ml-auto text-xs text-muted-foreground">{itens.length} concluídas</span>
-              </div>
-              <div className="space-y-2">
-                {itens.map(({ slot }) => {
-                  const d = getDisciplina(slot.disciplinaId);
-                  return (
-                    <div
-                      key={slot.id}
-                      className="flex items-start gap-3 rounded-xl p-3"
-                      style={{
-                        background: d?.cor ?? "var(--color-muted)",
-                        borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
-                      }}
-                    >
-                      <span
-                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg"
-                        style={{ background: d?.corForte ?? "var(--color-primary)" }}
+          {estudados
+            .map(([data, itens]) => [data, itens.filter(({ slot }) => matchBusca(slot))] as const)
+            .filter(([, itens]) => itens.length > 0)
+            .map(([data, itens]) => (
+              <Cartao key={data}>
+                <div className="mb-3 flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  <h3 className="font-bold">{formatarData(data)}</h3>
+                  <span className="ml-auto text-xs text-muted-foreground">{itens.length} concluídas</span>
+                </div>
+                <div className="space-y-2">
+                  {itens.map(({ slot }) => {
+                    const d = getDisciplina(slot.disciplinaId);
+                    return (
+                      <div
+                        key={slot.id}
+                        className="flex items-start gap-3 rounded-xl p-3"
+                        style={{
+                          background: d?.cor ?? "var(--color-muted)",
+                          borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
+                        }}
                       >
-                        <Check className="h-4 w-4 text-white" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className="text-[11px] font-bold uppercase tracking-wide"
-                          style={{ color: d?.corForte ?? "#333" }}
+                        <span
+                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg"
+                          style={{ background: d?.corForte ?? "var(--color-primary)" }}
                         >
-                          {d?.curto ?? slot.disciplinaNome} · {TIPO_LABEL[slot.tipo]} · {MODO_LABEL[slot.modo]} ·{" "}
-                          {slot.minutos}min {selo(slot.peso)}
-                        </p>
-                        <p className="text-sm font-medium text-neutral-800 line-through">{slot.titulo}</p>
+                          <Check className="h-4 w-4 text-white" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className="text-[11px] font-bold uppercase tracking-wide"
+                            style={{ color: d?.corForte ?? "#333" }}
+                          >
+                            {d?.curto ?? slot.disciplinaNome} · {TIPO_LABEL[slot.tipo]} · {MODO_LABEL[slot.modo]} ·{" "}
+                            {slot.minutos}min {selo(slot.peso)}
+                          </p>
+                          <p className="text-sm font-medium text-neutral-800 line-through">{slot.titulo}</p>
+                        </div>
+                        <button
+                          onClick={() => concluir(slot.id, data, false)}
+                          className="shrink-0 rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-neutral-700"
+                        >
+                          Desmarcar
+                        </button>
                       </div>
-                      <button
-                        onClick={() => concluir(slot.id, data, false)}
-                        className="shrink-0 rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-neutral-700"
-                      >
-                        Desmarcar
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              </Cartao>
+            ))}
+
+          {buscaNorm && estudados.flatMap(([, itens]) => itens).filter(({ slot }) => matchBusca(slot)).length === 0 && (
+            <Cartao>
+              <p className="text-sm text-muted-foreground">Nenhum tema estudado encontrado para "{busca}".</p>
             </Cartao>
-          ))}
+          )}
         </div>
       ) : (
         <>
@@ -204,119 +239,129 @@ function CronogramaPage() {
       </Cartao>
 
       <div className="space-y-4">
-        {dias.map((dia) => {
-          const feitos = dia.slots.filter((s) => estado.progresso[s.id]?.feito).length;
-          const pct = dia.slots.length ? (feitos / dia.slots.length) * 100 : 0;
-          const total = dia.slots.reduce((a, s) => a + s.minutos, 0);
-          return (
-            <Cartao key={dia.data} cor={dia.data === hoje ? "var(--color-primary)" : undefined}>
-              <div className="mb-3 flex flex-wrap items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-primary" />
-                <h3 className="font-bold">{formatarData(dia.data)}</h3>
-                {dia.data === hoje && (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
-                    HOJE
+        {dias
+          .map((dia) => {
+            const slotsVisiveis = dia.slots.filter(matchBusca);
+            const feitos = slotsVisiveis.filter((s) => estado.progresso[s.id]?.feito).length;
+            const pct = slotsVisiveis.length ? (feitos / slotsVisiveis.length) * 100 : 0;
+            const total = slotsVisiveis.reduce((a, s) => a + s.minutos, 0);
+            return { ...dia, slotsVisiveis, feitos, pct, total };
+          })
+          .filter((dia) => !buscaNorm || dia.slotsVisiveis.length > 0)
+          .map((dia) => {
+            return (
+              <Cartao key={dia.data} cor={dia.data === hoje ? "var(--color-primary)" : undefined}>
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  <h3 className="font-bold">{formatarData(dia.data)}</h3>
+                  {dia.data === hoje && (
+                    <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">
+                      HOJE
+                    </span>
+                  )}
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    {Math.floor(dia.total / 60)}h{String(dia.total % 60).padStart(2, "0")} · {dia.feitos}/{dia.slotsVisiveis.length}
                   </span>
-                )}
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {Math.floor(total / 60)}h{String(total % 60).padStart(2, "0")} · {feitos}/{dia.slots.length}
-                </span>
-              </div>
-              <Barra valor={pct} />
+                </div>
+                <Barra valor={dia.pct} />
 
-              <div className="mt-3 space-y-2">
-                {dia.slots.length === 0 && (
-                  <p className="text-sm text-muted-foreground">Dia livre — revise flashcards ou descanse.</p>
-                )}
-                {dia.slots.map((s) => {
-                  const d = getDisciplina(s.disciplinaId);
-                  const t = getTopico(s.topicoId);
-                  const feito = !!estado.progresso[s.id]?.feito;
-                  return (
-                    <div
-                      key={s.id}
-                      className="rounded-xl p-3"
-                      style={{
-                        background: d?.cor ?? "var(--color-muted)",
-                        borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
-                        opacity: feito ? 0.6 : 1,
-                      }}
-                    >
-                      <div className="flex items-start gap-3">
-                        <button
-                          onClick={() => concluir(s.id, dia.data, !feito)}
-                          aria-label="Concluir meta"
-                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2"
-                          style={{
-                            borderColor: d?.corForte ?? "var(--color-primary)",
-                            background: feito ? (d?.corForte ?? "var(--color-primary)") : "transparent",
-                          }}
-                        >
-                          {feito && <Check className="h-4 w-4 text-white" />}
-                        </button>
-                        <div className="min-w-0 flex-1">
-                          <p
-                            className="text-[11px] font-bold uppercase tracking-wide"
-                            style={{ color: d?.corForte ?? "#333" }}
+                <div className="mt-3 space-y-2">
+                  {dia.slotsVisiveis.length === 0 && !buscaNorm && (
+                    <p className="text-sm text-muted-foreground">Dia livre — revise flashcards ou descanse.</p>
+                  )}
+                  {dia.slotsVisiveis.length === 0 && buscaNorm && (
+                    <p className="text-sm text-muted-foreground">Nenhuma meta corresponde à pesquisa.</p>
+                  )}
+                  {dia.slotsVisiveis.map((s) => {
+                    const d = getDisciplina(s.disciplinaId);
+                    const t = getTopico(s.topicoId);
+                    const feito = !!estado.progresso[s.id]?.feito;
+                    return (
+                      <div
+                        key={s.id}
+                        className="rounded-xl p-3"
+                        style={{
+                          background: d?.cor ?? "var(--color-muted)",
+                          borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
+                          opacity: feito ? 0.6 : 1,
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <button
+                            onClick={() => concluir(s.id, dia.data, !feito)}
+                            aria-label="Concluir meta"
+                            className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2"
+                            style={{
+                              borderColor: d?.corForte ?? "var(--color-primary)",
+                              background: feito ? (d?.corForte ?? "var(--color-primary)") : "transparent",
+                            }}
                           >
-                            {d?.curto ?? s.disciplinaNome} · {TIPO_LABEL[s.tipo]} · {MODO_LABEL[s.modo]} · {s.minutos}
-                            min {selo(s.peso)}
-                          </p>
-                          <p
-                            className={`text-sm font-medium text-neutral-800 ${feito ? "line-through" : ""}`}
-                          >
-                            {s.titulo}
-                          </p>
-                          {t?.f?.length ? (
-                            <ul className="mt-1 space-y-0.5 text-[11px] text-neutral-600">
-                              {t.f.map((foco) => (
-                                <li key={foco}>• {foco}</li>
-                              ))}
-                            </ul>
-                          ) : null}
-                          {s.topicoId && dia.data >= hoje && (
-                            <label className="mt-2 flex items-center gap-2 text-[11px] text-neutral-700">
-                              mover para:
-                              <input
-                                type="date"
-                                min={hoje}
-                                value={estado.pins[s.id] ?? dia.data}
-                                onChange={(e) => moverSlot(s.id, e.target.value)}
-                                className="rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] text-neutral-800"
-                              />
-                            </label>
-                          )}
+                            {feito && <Check className="h-4 w-4 text-white" />}
+                          </button>
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className="text-[11px] font-bold uppercase tracking-wide"
+                              style={{ color: d?.corForte ?? "#333" }}
+                            >
+                              {d?.curto ?? s.disciplinaNome} · {TIPO_LABEL[s.tipo]} · {MODO_LABEL[s.modo]} · {s.minutos}
+                              min {selo(s.peso)}
+                            </p>
+                            <p className={`text-sm font-medium text-neutral-800 ${feito ? "line-through" : ""}`}>
+                              {s.titulo}
+                            </p>
+                            {t?.f?.length ? (
+                              <ul className="mt-1 space-y-0.5 text-[11px] text-neutral-600">
+                                {t.f.map((foco) => (
+                                  <li key={foco}>• {foco}</li>
+                                ))}
+                              </ul>
+                            ) : null}
+                            {s.topicoId && dia.data >= hoje && (
+                              <label className="mt-2 flex items-center gap-2 text-[11px] text-neutral-700">
+                                mover para:
+                                <input
+                                  type="date"
+                                  min={hoje}
+                                  value={estado.pins[s.id] ?? dia.data}
+                                  onChange={(e) => moverSlot(s.id, e.target.value)}
+                                  className="rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] text-neutral-800"
+                                />
+                              </label>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {dia.data >= hoje && dia.slots.length > 0 && feitos === dia.slots.length && (
-                <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-primary/10 p-3">
-                  <p className="text-sm font-semibold">
-                    Dia concluído! Quer adiantar as metas do próximo dia para hoje?
-                  </p>
-                  <Botao className="ml-auto" onClick={() => adiantar(dia.data)}>
-                    Adiantar metas
-                  </Botao>
+                    );
+                  })}
                 </div>
-              )}
 
+                {dia.data >= hoje && dia.slotsVisiveis.length > 0 && dia.feitos === dia.slotsVisiveis.length && (
+                  <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-primary/10 p-3">
+                    <p className="text-sm font-semibold">
+                      Dia concluído! Quer adiantar as metas do próximo dia para hoje?
+                    </p>
+                    <Botao className="ml-auto" onClick={() => adiantar(dia.data)}>
+                      Adiantar metas
+                    </Botao>
+                  </div>
+                )}
 
-
-              {dia.data >= hoje && (
-                <div className="mt-3 rounded-xl border border-dashed border-border p-3">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-                    Discursiva do dia
-                  </p>
-                  <p className="mt-1 text-sm">{dia.discursiva}</p>
-                </div>
-              )}
-            </Cartao>
-          );
-        })}
+                {dia.data >= hoje && (
+                  <div className="mt-3 rounded-xl border border-dashed border-border p-3">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                      Discursiva do dia
+                    </p>
+                    <p className="mt-1 text-sm">{dia.discursiva}</p>
+                  </div>
+                )}
+              </Cartao>
+            );
+          })}
+        {buscaNorm && dias.filter((dia) => dia.slots.some(matchBusca)).length === 0 && (
+          <Cartao>
+            <p className="text-sm text-muted-foreground">Nenhum dia encontrado com o tema "{busca}".</p>
+          </Cartao>
+        )}
       </div>
 
       <div className="flex justify-center">

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Botao, Cartao, Titulo } from "@/components/ui-app";
 import { DISCIPLINAS, getDisciplina } from "@/data/edital";
@@ -29,6 +29,19 @@ function PlanejamentoPage() {
   const { plano, hoje, estado } = useStore();
   const [mesRef, setMesRef] = useState(() => hoje.slice(0, 7));
   const [selecionado, setSelecionado] = useState<string | null>(hoje);
+  const [busca, setBusca] = useState("");
+
+  const buscaNorm = busca.trim().toLowerCase();
+  const matchBusca = (s: { titulo: string; disciplinaNome: string; disciplinaId: string; topicoId?: string | null }) => {
+    if (!buscaNorm) return true;
+    const d = getDisciplina(s.disciplinaId);
+    return (
+      s.titulo.toLowerCase().includes(buscaNorm) ||
+      s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
+      (d?.curto?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (d?.nome?.toLowerCase().includes(buscaNorm) ?? false)
+    );
+  };
 
   const [ano, mes] = mesRef.split("-").map(Number);
 
@@ -57,6 +70,17 @@ function PlanejamentoPage() {
         Planejamento
       </Titulo>
 
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="text"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Pesquisar tema, disciplina ou palavra-chave..."
+          className="w-full rounded-xl border border-input bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+        />
+      </div>
+
       <Cartao>
         <div className="mb-4 flex items-center gap-3">
           <Botao variante="contorno" onClick={() => mudarMes(-1)}>
@@ -84,19 +108,22 @@ function PlanejamentoPage() {
             const feitos = dia?.slots.filter((s) => estado.progresso[s.id]?.feito).length ?? 0;
             const total = dia?.slots.length ?? 0;
             const completo = total > 0 && feitos === total;
+            const temMatch = buscaNorm ? (dia?.slots.some(matchBusca) ?? false) : false;
             return (
               <button
                 key={data}
                 onClick={() => setSelecionado(data)}
                 className={`min-h-[64px] rounded-xl border p-1 text-left transition-colors ${
-                  selecionado === data ? "border-primary" : "border-border"
-                } ${data === hoje ? "bg-primary/10" : "bg-card"} hover:bg-muted`}
+                  selecionado === data ? "border-primary" : temMatch ? "border-primary/70" : "border-border"
+                } ${data === hoje ? "bg-primary/10" : "bg-card"} hover:bg-muted ${
+                  temMatch ? "ring-1 ring-primary/30" : ""
+                }`}
               >
                 <span className={`text-[11px] font-bold ${completo ? "text-primary" : ""}`}>
                   {Number(data.slice(8))}
                 </span>
                 <span className="mt-1 flex flex-wrap gap-0.5">
-                  {dia?.slots.map((s) => (
+                  {(buscaNorm ? dia?.slots.filter(matchBusca) : dia?.slots)?.map((s) => (
                     <span
                       key={s.id}
                       className="h-1.5 w-4 rounded-full"
@@ -109,6 +136,11 @@ function PlanejamentoPage() {
                     {feitos}/{total}
                   </span>
                 )}
+                {buscaNorm && temMatch && (
+                  <span className="mt-0.5 block text-[9px] font-bold text-primary">
+                    {(dia?.slots.filter(matchBusca).length ?? 0)} encontrados
+                  </span>
+                )}
               </button>
             );
           })}
@@ -119,8 +151,12 @@ function PlanejamentoPage() {
         <Cartao>
           <h3 className="mb-3 font-bold">{formatarData(diaSel.data)}</h3>
           <div className="space-y-2">
-            {diaSel.slots.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma meta nesse dia.</p>}
-            {diaSel.slots.map((s) => {
+            {diaSel.slots.filter(matchBusca).length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {buscaNorm ? "Nenhuma meta corresponde à pesquisa." : "Nenhuma meta nesse dia."}
+              </p>
+            )}
+            {diaSel.slots.filter(matchBusca).map((s) => {
               const d = getDisciplina(s.disciplinaId);
               return (
                 <div
