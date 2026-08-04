@@ -152,53 +152,62 @@ function CronogramaPage() {
             </Cartao>
           )}
 
-          {estudados.map(([data, itens]) => (
-            <Cartao key={data}>
-              <div className="mb-3 flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-primary" />
-                <h3 className="font-bold">{formatarData(data)}</h3>
-                <span className="ml-auto text-xs text-muted-foreground">{itens.length} concluídas</span>
-              </div>
-              <div className="space-y-2">
-                {itens.map(({ slot }) => {
-                  const d = getDisciplina(slot.disciplinaId);
-                  return (
-                    <div
-                      key={slot.id}
-                      className="flex items-start gap-3 rounded-xl p-3"
-                      style={{
-                        background: d?.cor ?? "var(--color-muted)",
-                        borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
-                      }}
-                    >
-                      <span
-                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg"
-                        style={{ background: d?.corForte ?? "var(--color-primary)" }}
+          {estudados
+            .map(([data, itens]) => [data, itens.filter(({ slot }) => matchBusca(slot))] as const)
+            .filter(([, itens]) => itens.length > 0)
+            .map(([data, itens]) => (
+              <Cartao key={data}>
+                <div className="mb-3 flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                  <h3 className="font-bold">{formatarData(data)}</h3>
+                  <span className="ml-auto text-xs text-muted-foreground">{itens.length} concluídas</span>
+                </div>
+                <div className="space-y-2">
+                  {itens.map(({ slot }) => {
+                    const d = getDisciplina(slot.disciplinaId);
+                    return (
+                      <div
+                        key={slot.id}
+                        className="flex items-start gap-3 rounded-xl p-3"
+                        style={{
+                          background: d?.cor ?? "var(--color-muted)",
+                          borderLeft: `4px solid ${d?.corForte ?? "var(--color-primary)"}`,
+                        }}
                       >
-                        <Check className="h-4 w-4 text-white" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p
-                          className="text-[11px] font-bold uppercase tracking-wide"
-                          style={{ color: d?.corForte ?? "#333" }}
+                        <span
+                          className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg"
+                          style={{ background: d?.corForte ?? "var(--color-primary)" }}
                         >
-                          {d?.curto ?? slot.disciplinaNome} · {TIPO_LABEL[slot.tipo]} · {MODO_LABEL[slot.modo]} ·{" "}
-                          {slot.minutos}min {selo(slot.peso)}
-                        </p>
-                        <p className="text-sm font-medium text-neutral-800 line-through">{slot.titulo}</p>
+                          <Check className="h-4 w-4 text-white" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className="text-[11px] font-bold uppercase tracking-wide"
+                            style={{ color: d?.corForte ?? "#333" }}
+                          >
+                            {d?.curto ?? slot.disciplinaNome} · {TIPO_LABEL[slot.tipo]} · {MODO_LABEL[slot.modo]} ·{" "}
+                            {slot.minutos}min {selo(slot.peso)}
+                          </p>
+                          <p className="text-sm font-medium text-neutral-800 line-through">{slot.titulo}</p>
+                        </div>
+                        <button
+                          onClick={() => concluir(slot.id, data, false)}
+                          className="shrink-0 rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-neutral-700"
+                        >
+                          Desmarcar
+                        </button>
                       </div>
-                      <button
-                        onClick={() => concluir(slot.id, data, false)}
-                        className="shrink-0 rounded-lg border border-white/70 bg-white/70 px-2 py-1 text-[11px] font-semibold text-neutral-700"
-                      >
-                        Desmarcar
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              </Cartao>
+            ))}
+
+          {buscaNorm && estudados.flatMap(([, itens]) => itens).filter(({ slot }) => matchBusca(slot)).length === 0 && (
+            <Cartao>
+              <p className="text-sm text-muted-foreground">Nenhum tema estudado encontrado para "{busca}".</p>
             </Cartao>
-          ))}
+          )}
         </div>
       ) : (
         <>
