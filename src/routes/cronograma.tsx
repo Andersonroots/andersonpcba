@@ -36,7 +36,7 @@ function CronogramaPage() {
   const matchBusca = (s: { titulo: string; disciplinaNome: string; topicoId?: string | null; disciplinaId: string }) => {
     if (!buscaNorm) return true;
     const d = getDisciplina(s.disciplinaId);
-    const t = getTopico(s.topicoId);
+    const t = s.topicoId ? getTopico(s.topicoId) : null;
     return (
       s.titulo.toLowerCase().includes(buscaNorm) ||
       s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
