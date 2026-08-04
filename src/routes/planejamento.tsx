@@ -108,19 +108,22 @@ function PlanejamentoPage() {
             const feitos = dia?.slots.filter((s) => estado.progresso[s.id]?.feito).length ?? 0;
             const total = dia?.slots.length ?? 0;
             const completo = total > 0 && feitos === total;
+            const temMatch = buscaNorm ? (dia?.slots.some(matchBusca) ?? false) : false;
             return (
               <button
                 key={data}
                 onClick={() => setSelecionado(data)}
                 className={`min-h-[64px] rounded-xl border p-1 text-left transition-colors ${
-                  selecionado === data ? "border-primary" : "border-border"
-                } ${data === hoje ? "bg-primary/10" : "bg-card"} hover:bg-muted`}
+                  selecionado === data ? "border-primary" : temMatch ? "border-primary/70" : "border-border"
+                } ${data === hoje ? "bg-primary/10" : "bg-card"} hover:bg-muted ${
+                  temMatch ? "ring-1 ring-primary/30" : ""
+                }`}
               >
                 <span className={`text-[11px] font-bold ${completo ? "text-primary" : ""}`}>
                   {Number(data.slice(8))}
                 </span>
                 <span className="mt-1 flex flex-wrap gap-0.5">
-                  {dia?.slots.map((s) => (
+                  {(buscaNorm ? dia?.slots.filter(matchBusca) : dia?.slots)?.map((s) => (
                     <span
                       key={s.id}
                       className="h-1.5 w-4 rounded-full"
@@ -131,6 +134,11 @@ function PlanejamentoPage() {
                 {total > 0 && (
                   <span className="mt-0.5 block text-[9px] text-muted-foreground">
                     {feitos}/{total}
+                  </span>
+                )}
+                {buscaNorm && temMatch && (
+                  <span className="mt-0.5 block text-[9px] font-bold text-primary">
+                    {(dia?.slots.filter(matchBusca).length ?? 0)} encontrados
                   </span>
                 )}
               </button>
