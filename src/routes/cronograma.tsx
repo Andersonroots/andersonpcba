@@ -30,6 +30,21 @@ function CronogramaPage() {
   const [offset, setOffset] = useState(0);
   const [quantos, setQuantos] = useState(10);
   const [aba, setAba] = useState<"agenda" | "estudados">("agenda");
+  const [busca, setBusca] = useState("");
+
+  const buscaNorm = busca.trim().toLowerCase();
+  const matchBusca = (s: { titulo: string; disciplinaNome: string; topicoId?: string | null; disciplinaId: string }) => {
+    if (!buscaNorm) return true;
+    const d = getDisciplina(s.disciplinaId);
+    const t = getTopico(s.topicoId);
+    return (
+      s.titulo.toLowerCase().includes(buscaNorm) ||
+      s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
+      (d?.curto?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (d?.nome?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (t?.f?.some((f) => f.toLowerCase().includes(buscaNorm)) ?? false)
+    );
+  };
 
   const inicio = addDays(hoje, offset);
   const dias = useMemo(

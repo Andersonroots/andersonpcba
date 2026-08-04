@@ -29,6 +29,19 @@ function PlanejamentoPage() {
   const { plano, hoje, estado } = useStore();
   const [mesRef, setMesRef] = useState(() => hoje.slice(0, 7));
   const [selecionado, setSelecionado] = useState<string | null>(hoje);
+  const [busca, setBusca] = useState("");
+
+  const buscaNorm = busca.trim().toLowerCase();
+  const matchBusca = (s: { titulo: string; disciplinaNome: string; disciplinaId: string; topicoId?: string | null }) => {
+    if (!buscaNorm) return true;
+    const d = getDisciplina(s.disciplinaId);
+    return (
+      s.titulo.toLowerCase().includes(buscaNorm) ||
+      s.disciplinaNome.toLowerCase().includes(buscaNorm) ||
+      (d?.curto?.toLowerCase().includes(buscaNorm) ?? false) ||
+      (d?.nome?.toLowerCase().includes(buscaNorm) ?? false)
+    );
+  };
 
   const [ano, mes] = mesRef.split("-").map(Number);
 
