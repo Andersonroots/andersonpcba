@@ -143,8 +143,12 @@ function PlanejamentoPage() {
         <Cartao>
           <h3 className="mb-3 font-bold">{formatarData(diaSel.data)}</h3>
           <div className="space-y-2">
-            {diaSel.slots.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma meta nesse dia.</p>}
-            {diaSel.slots.map((s) => {
+            {diaSel.slots.filter(matchBusca).length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {buscaNorm ? "Nenhuma meta corresponde à pesquisa." : "Nenhuma meta nesse dia."}
+              </p>
+            )}
+            {diaSel.slots.filter(matchBusca).map((s) => {
               const d = getDisciplina(s.disciplinaId);
               return (
                 <div
