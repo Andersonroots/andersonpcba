@@ -16,6 +16,7 @@ export interface RegistroQuestoes {
   id: string;
   data: string;
   disciplinaId: string;
+  topicoId?: string | null;
   acertos: number;
   erros: number;
 }
