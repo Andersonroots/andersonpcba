@@ -90,7 +90,7 @@ function QuestoesPage() {
           </h3>
           <div className="grid gap-3 sm:grid-cols-4">
             <div className="sm:col-span-2">
-              <Selecao label="Disciplina" value={disciplinaId} onChange={(e) => setDisciplinaId(e.target.value)}>
+              <Selecao label="Disciplina" value={disciplinaId} onChange={(e) => trocarDisciplina(e.target.value)}>
                 {DISCIPLINAS.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.nome}
@@ -98,9 +98,20 @@ function QuestoesPage() {
                 ))}
               </Selecao>
             </div>
+            <div className="sm:col-span-2">
+              <Selecao label="Sub tópico" value={topicoId} onChange={(e) => setTopicoId(e.target.value)}>
+                <option value="">Todos / geral</option>
+                {topicos.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.t}
+                  </option>
+                ))}
+              </Selecao>
+            </div>
             <Campo label="Acertos" type="number" min={0} value={acertos} onChange={(e) => setAcertos(e.target.value)} />
             <Campo label="Erros" type="number" min={0} value={erros} onChange={(e) => setErros(e.target.value)} />
           </div>
+
           <Botao className="mt-3" onClick={adicionar}>
             <Plus className="h-4 w-4" /> Adicionar
           </Botao>
