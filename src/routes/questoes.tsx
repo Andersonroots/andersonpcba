@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Plus, Trash2, ListChecks } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Botao, Cartao, Metrica, Titulo, Selecao, Campo } from "@/components/ui-app";
-import { DISCIPLINAS, getDisciplina } from "@/data/edital";
+import { DISCIPLINAS, getDisciplina, getTopico } from "@/data/edital";
 import { formatarData } from "@/lib/plano";
 
 export const Route = createFileRoute("/questoes")({
