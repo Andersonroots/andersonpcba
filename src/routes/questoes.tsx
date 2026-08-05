@@ -28,8 +28,19 @@ export const Route = createFileRoute("/questoes")({
 function QuestoesPage() {
   const { estado, set, hoje } = useStore();
   const [disciplinaId, setDisciplinaId] = useState(DISCIPLINAS[0].id);
+  const [topicoId, setTopicoId] = useState("");
   const [acertos, setAcertos] = useState("");
   const [erros, setErros] = useState("");
+
+  const topicos = useMemo(
+    () => DISCIPLINAS.find((d) => d.id === disciplinaId)?.topicos ?? [],
+    [disciplinaId],
+  );
+
+  const trocarDisciplina = (id: string) => {
+    setDisciplinaId(id);
+    setTopicoId("");
+  };
 
   const adicionar = () => {
     const a = Number(acertos) || 0;
@@ -38,7 +49,7 @@ function QuestoesPage() {
     set((st) => ({
       ...st,
       questoes: [
-        { id: `${Date.now()}`, data: hoje, disciplinaId, acertos: a, erros: e },
+        { id: `${Date.now()}`, data: hoje, disciplinaId, topicoId: topicoId || null, acertos: a, erros: e },
         ...st.questoes,
       ],
     }));
@@ -48,6 +59,7 @@ function QuestoesPage() {
 
   const remover = (id: string) =>
     set((st) => ({ ...st, questoes: st.questoes.filter((q) => q.id !== id) }));
+
 
   const porDisciplina = useMemo(() => {
     return DISCIPLINAS.map((d) => {
