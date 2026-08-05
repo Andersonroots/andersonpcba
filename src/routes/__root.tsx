@@ -134,17 +134,20 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
-        {semLayout ? (
-          <Outlet />
-        ) : (
-          <AuthGate>
-            <Layout>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
-            </Layout>
-          </AuthGate>
-        )}
+        <FocoProvider>
+          {semLayout ? (
+            <Outlet />
+          ) : (
+            <AuthGate>
+              <Layout>
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+              </Layout>
+            </AuthGate>
+          )}
+        </FocoProvider>
       </StoreProvider>
+
     </QueryClientProvider>
   );
 }
