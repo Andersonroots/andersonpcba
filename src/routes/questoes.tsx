@@ -164,14 +164,17 @@ function QuestoesPage() {
         <div className="space-y-2">
           {estado.questoes.slice(0, 30).map((q) => {
             const d = getDisciplina(q.disciplinaId);
+            const t = q.topicoId ? getTopico(q.topicoId) : null;
             const total = q.acertos + q.erros;
             return (
               <div key={q.id} className="flex items-center gap-3 rounded-xl border border-border p-2.5 text-sm">
                 <span className="h-8 w-1.5 rounded-full" style={{ background: d?.corForte }} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{d?.nome}</p>
+                  {t && <p className="truncate text-[11px] text-muted-foreground">{t.t}</p>}
                   <p className="text-[11px] text-muted-foreground">{formatarData(q.data)}</p>
                 </div>
+
                 <span className="text-xs font-semibold">
                   {q.acertos}/{total} ({total ? Math.round((q.acertos / total) * 100) : 0}%)
                 </span>
