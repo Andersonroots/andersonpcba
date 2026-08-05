@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Plus, Trash2, ListChecks } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { Barra, Botao, Cartao, Metrica, Titulo, Selecao, Campo } from "@/components/ui-app";
-import { DISCIPLINAS, getDisciplina } from "@/data/edital";
+import { DISCIPLINAS, getDisciplina, getTopico } from "@/data/edital";
 import { formatarData } from "@/lib/plano";
 
 export const Route = createFileRoute("/questoes")({
@@ -28,8 +28,19 @@ export const Route = createFileRoute("/questoes")({
 function QuestoesPage() {
   const { estado, set, hoje } = useStore();
   const [disciplinaId, setDisciplinaId] = useState(DISCIPLINAS[0].id);
+  const [topicoId, setTopicoId] = useState("");
   const [acertos, setAcertos] = useState("");
   const [erros, setErros] = useState("");
+
+  const topicos = useMemo(
+    () => DISCIPLINAS.find((d) => d.id === disciplinaId)?.topicos ?? [],
+    [disciplinaId],
+  );
+
+  const trocarDisciplina = (id: string) => {
+    setDisciplinaId(id);
+    setTopicoId("");
+  };
 
   const adicionar = () => {
     const a = Number(acertos) || 0;
@@ -38,7 +49,7 @@ function QuestoesPage() {
     set((st) => ({
       ...st,
       questoes: [
-        { id: `${Date.now()}`, data: hoje, disciplinaId, acertos: a, erros: e },
+        { id: `${Date.now()}`, data: hoje, disciplinaId, topicoId: topicoId || null, acertos: a, erros: e },
         ...st.questoes,
       ],
     }));
@@ -48,6 +59,7 @@ function QuestoesPage() {
 
   const remover = (id: string) =>
     set((st) => ({ ...st, questoes: st.questoes.filter((q) => q.id !== id) }));
+
 
   const porDisciplina = useMemo(() => {
     return DISCIPLINAS.map((d) => {
@@ -78,7 +90,7 @@ function QuestoesPage() {
           </h3>
           <div className="grid gap-3 sm:grid-cols-4">
             <div className="sm:col-span-2">
-              <Selecao label="Disciplina" value={disciplinaId} onChange={(e) => setDisciplinaId(e.target.value)}>
+              <Selecao label="Disciplina" value={disciplinaId} onChange={(e) => trocarDisciplina(e.target.value)}>
                 {DISCIPLINAS.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.nome}
@@ -86,9 +98,20 @@ function QuestoesPage() {
                 ))}
               </Selecao>
             </div>
+            <div className="sm:col-span-2">
+              <Selecao label="Sub tópico" value={topicoId} onChange={(e) => setTopicoId(e.target.value)}>
+                <option value="">Todos / geral</option>
+                {topicos.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.t}
+                  </option>
+                ))}
+              </Selecao>
+            </div>
             <Campo label="Acertos" type="number" min={0} value={acertos} onChange={(e) => setAcertos(e.target.value)} />
             <Campo label="Erros" type="number" min={0} value={erros} onChange={(e) => setErros(e.target.value)} />
           </div>
+
           <Botao className="mt-3" onClick={adicionar}>
             <Plus className="h-4 w-4" /> Adicionar
           </Botao>
@@ -141,14 +164,17 @@ function QuestoesPage() {
         <div className="space-y-2">
           {estado.questoes.slice(0, 30).map((q) => {
             const d = getDisciplina(q.disciplinaId);
+            const t = q.topicoId ? getTopico(q.topicoId) : null;
             const total = q.acertos + q.erros;
             return (
               <div key={q.id} className="flex items-center gap-3 rounded-xl border border-border p-2.5 text-sm">
                 <span className="h-8 w-1.5 rounded-full" style={{ background: d?.corForte }} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{d?.nome}</p>
+                  {t && <p className="truncate text-[11px] text-muted-foreground">{t.t}</p>}
                   <p className="text-[11px] text-muted-foreground">{formatarData(q.data)}</p>
                 </div>
+
                 <span className="text-xs font-semibold">
                   {q.acertos}/{total} ({total ? Math.round((q.acertos / total) * 100) : 0}%)
                 </span>
