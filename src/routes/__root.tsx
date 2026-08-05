@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "@/lib/store";
 import { Layout } from "@/components/Layout";
 import { AuthGate } from "@/components/AuthGate";
+import { FocoProvider } from "@/lib/foco";
 
 function NotFoundComponent() {
   return (
@@ -133,17 +134,20 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
-        {semLayout ? (
-          <Outlet />
-        ) : (
-          <AuthGate>
-            <Layout>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
-            </Layout>
-          </AuthGate>
-        )}
+        <FocoProvider>
+          {semLayout ? (
+            <Outlet />
+          ) : (
+            <AuthGate>
+              <Layout>
+                {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+                <Outlet />
+              </Layout>
+            </AuthGate>
+          )}
+        </FocoProvider>
       </StoreProvider>
+
     </QueryClientProvider>
   );
 }
