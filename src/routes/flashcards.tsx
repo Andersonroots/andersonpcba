@@ -71,44 +71,21 @@ function FlashcardsPage() {
     setImportando(true);
     setAviso(null);
     try {
-      const [{ default: JSZip }, initSqlJs] = await Promise.all([
-        import("jszip"),
-        import("sql.js").then((m) => m.default),
-      ]);
-      const zip = await JSZip.loadAsync(await arquivo.arrayBuffer());
-      const nomeDb = ["collection.anki21", "collection.anki2"].find((n) => zip.file(n));
-      if (!nomeDb) throw new Error("Arquivo .apkg sem banco de dados reconhecido.");
-      const bytes = await zip.file(nomeDb)!.async("uint8array");
-      const SQL = await initSqlJs({
-        locateFile: (f: string) => `https://sql.js.org/dist/${f}`,
-      });
-      const db = new SQL.Database(bytes);
-      const res = db.exec("SELECT flds FROM notes");
-      const limpar = (s: string) =>
-        s
-          .replace(/<[^>]*>/g, " ")
-          .replace(/&nbsp;/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+      const { lerApkg } = await import("@/lib/apkg");
+      const brutos = await lerApkg(arquivo);
       const nome = arquivo.name.replace(/\.apkg$/i, "");
-      const novos: Card[] = [];
-      res[0]?.values.forEach((linha) => {
-        const campos = String(linha[0]).split("\u001f");
-        const f = limpar(campos[0] ?? "");
-        const v = limpar(campos.slice(1).join(" — "));
-        if (f && v) novos.push(novoCard(f, v, nome, hoje));
-      });
-      db.close();
-      if (!novos.length) throw new Error("Nenhum cartão encontrado no arquivo.");
+      const novos: Card[] = brutos.map((c) => novoCard(c.frente, c.verso, nome, hoje));
       set((st) => ({ ...st, cards: [...st.cards, ...novos] }));
       setBaralho(nome);
       setAviso(`${novos.length} cartões importados do baralho "${nome}".`);
     } catch (e) {
+      console.error("Falha ao importar .apkg", e);
       setAviso(e instanceof Error ? e.message : "Não consegui ler esse arquivo .apkg.");
     } finally {
       setImportando(false);
     }
   };
+
 
   const apagarBaralho = (nome: string) => {
     if (!confirm(`Apagar todos os cartões do baralho "${nome}"?`)) return;
