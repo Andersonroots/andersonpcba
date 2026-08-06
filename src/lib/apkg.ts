@@ -1,4 +1,4 @@
-import wasmUrl from "sql.js/dist/sql-wasm.wasm?url";
+const wasmUrl = "/wasm/sql-wasm.wasm";
 
 export interface CartaoBruto {
   frente: string;
