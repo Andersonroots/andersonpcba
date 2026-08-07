@@ -10,7 +10,7 @@ import {
 } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Card } from "@/lib/srs";
-import { gerarPlano, hojeIso, type Dia, type ProgressoItem } from "@/lib/plano";
+import { gerarPlano, hojeIso, horaBrasilia, type Dia, type ProgressoItem } from "@/lib/plano";
 
 export interface RegistroQuestoes {
   id: string;
@@ -115,7 +115,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
     setPronto(true);
-    const t = setInterval(() => setHoje(hojeIso()), 60000);
+    const t = setInterval(() => setHoje(hojeIso()), 30000);
     return () => clearInterval(t);
   }, []);
 
@@ -158,7 +158,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       if (!cancelado) {
         setSincronizando(false);
-        setUltimaSync(new Date().toLocaleTimeString("pt-BR"));
+        setUltimaSync(horaBrasilia());
       }
     })();
     return () => {
@@ -181,7 +181,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         .from("estudo_estado")
         .upsert({ user_id: usuario.id, dados: estado as never, atualizado_em: new Date().toISOString() });
       setSincronizando(false);
-      setUltimaSync(new Date().toLocaleTimeString("pt-BR"));
+      setUltimaSync(horaBrasilia());
     }, 1200);
     return () => clearTimeout(t);
   }, [estado, usuario, pronto]);
@@ -230,7 +230,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         .from("estudo_estado")
         .upsert({ user_id: usuario.id, dados: novo as never, atualizado_em: new Date().toISOString() });
       setSincronizando(false);
-      setUltimaSync(new Date().toLocaleTimeString("pt-BR"));
+      setUltimaSync(horaBrasilia());
     }
   }, [usuario, estado.tema]);
 

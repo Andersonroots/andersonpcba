@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HardDrive, RefreshCw, Save, Unplug } from "lucide-react";
+import { dataHoraBrasilia } from "@/lib/plano";
 import { useStore } from "@/lib/store";
 import { Botao, Cartao } from "@/components/ui-app";
 import {
@@ -156,7 +157,7 @@ export function DriveCard() {
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground">
             {ultimo
-              ? `Último backup no Drive: ${new Date(ultimo).toLocaleString("pt-BR")}`
+              ? `Último backup no Drive: ${dataHoraBrasilia(ultimo)}`
               : "Nenhum backup enviado ainda."}
           </p>
           <div className="flex flex-wrap gap-3">
