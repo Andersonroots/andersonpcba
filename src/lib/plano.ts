@@ -44,7 +44,24 @@ export const addDays = (s: string, n: number) => {
   return iso(d);
 };
 
-export const hojeIso = () => iso(new Date());
+export const FUSO_BR = "America/Sao_Paulo";
+
+/** Data de hoje no horário de Brasília (yyyy-mm-dd) */
+export const hojeIso = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: FUSO_BR,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+/** Hora atual de Brasília, ex: 21:45 */
+export const horaBrasilia = (d: Date = new Date()) =>
+  d.toLocaleTimeString("pt-BR", { timeZone: FUSO_BR, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+/** Data e hora completas no horário de Brasília */
+export const dataHoraBrasilia = (d: Date | string = new Date()) =>
+  (typeof d === "string" ? new Date(d) : d).toLocaleString("pt-BR", { timeZone: FUSO_BR });
 
 function hash(str: string) {
   let h = 0;
