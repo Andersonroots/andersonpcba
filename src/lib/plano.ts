@@ -98,7 +98,7 @@ export function construirSessoes(): Sessao[] {
   const porDisc = DISCIPLINAS.map((d) => ({
     id: d.id,
     peso: d.peso,
-    fila: [...d.topicos].sort((a, b) => b.p - a.p),
+    fila: [...d.topicos].sort((a, b) => b.p - a.p || (b.i ?? 0) - (a.i ?? 0)),
   })).sort((a, b) => b.peso - a.peso);
 
   let restante = TODOS_TOPICOS.length;

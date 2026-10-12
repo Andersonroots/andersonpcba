@@ -2,6 +2,8 @@
 // peso: 1 (🧊 baixa incidência) ... 5 (🔥🔥🔥 altíssima incidência na banca AOCP)
 // modo: como o tópico deve ser estudado (aula, pdf, lei seca, exercícios)
 
+import { AJUSTES, PESO_DISCIPLINA } from "./dossie";
+
 export type Modo = "aula" | "pdf" | "lei" | "exercicios";
 
 export interface Topico {
@@ -10,6 +12,7 @@ export interface Topico {
   p: 1 | 2 | 3 | 4 | 5;
   m: Modo;
   f: string[]; // pontos de foco / o que mais cai
+  i?: number; // incidência (%) segundo os dossiês
 }
 
 export interface Disciplina {
@@ -1617,6 +1620,20 @@ export const DISCIPLINAS: Disciplina[] = [
     ],
   },
 ];
+
+// Aplica a repriorização dos Dossiês Estratégicos PC-BA (incidência real da AOCP)
+DISCIPLINAS.forEach((d) => {
+  d.peso = PESO_DISCIPLINA[d.id] ?? d.peso;
+  d.topicos.forEach((t) => {
+    const a = AJUSTES[t.id];
+    if (!a) return;
+    t.p = a.p;
+    t.i = a.i;
+    if (a.f && !t.f.includes(a.f)) t.f = [a.f, ...t.f];
+  });
+  // dentro da disciplina: peso e incidência do dossiê decidem a ordem
+  d.topicos.sort((x, y) => y.p - x.p || (y.i ?? 0) - (x.i ?? 0));
+});
 
 export const TODOS_TOPICOS = DISCIPLINAS.flatMap((d) =>
   d.topicos.map((t) => ({ ...t, disciplinaId: d.id, disciplinaNome: d.nome })),
